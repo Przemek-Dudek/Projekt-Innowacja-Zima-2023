@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Specialization__c</fullName>
+    <externalId>false</externalId>
+    <label>Specialization</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Cardiology</fullName>
+                <default>false</default>
+                <label>Cardiology</label>
+            </value>
+            <value>
+                <fullName>Dermatology</fullName>
+                <default>false</default>
+                <label>Dermatology</label>
+            </value>
+            <value>
+                <fullName>Endocrinology</fullName>
+                <default>false</default>
+                <label>Endocrinology</label>
+            </value>
+            <value>
+                <fullName>Gastroenterology</fullName>
+                <default>false</default>
+                <label>Gastroenterology</label>
+            </value>
+            <value>
+                <fullName>Hematology</fullName>
+                <default>false</default>
+                <label>Hematology</label>
+            </value>
+            <value>
+                <fullName>Neurology</fullName>
+                <default>false</default>
+                <label>Neurology</label>
+            </value>
+            <value>
+                <fullName>Oncology</fullName>
+                <default>false</default>
+                <label>Oncology</label>
+            </value>
+            <value>
+                <fullName>Orthopedics</fullName>
+                <default>false</default>
+                <label>Orthopedics</label>
+            </value>
+            <value>
+                <fullName>Pediatrics</fullName>
+                <default>false</default>
+                <label>Pediatrics</label>
+            </value>
+            <value>
+                <fullName>Psychiatry</fullName>
+                <default>false</default>
+                <label>Psychiatry</label>
+            </value>
+            <value>
+                <fullName>Pulmonology</fullName>
+                <default>false</default>
+                <label>Pulmonology</label>
+            </value>
+            <value>
+                <fullName>Rheumatology</fullName>
+                <default>false</default>
+                <label>Rheumatology</label>
+            </value>
+            <value>
+                <fullName>Urology</fullName>
+                <default>false</default>
+                <label>Urology</label>
+            </value>
+            <value>
+                <fullName>Ophthalmology</fullName>
+                <default>false</default>
+                <label>Ophthalmology</label>
+            </value>
+            <value>
+                <fullName>Obstetrics &amp; Gynecology</fullName>
+                <default>false</default>
+                <label>Obstetrics &amp; Gynecology</label>
+            </value>
+            <value>
+                <fullName>Allergy &amp; Immunology</fullName>
+                <default>false</default>
+                <label>Allergy &amp; Immunology</label>
+            </value>
+            <value>
+                <fullName>Infectious Disease</fullName>
+                <default>false</default>
+                <label>Infectious Disease</label>
+            </value>
+            <value>
+                <fullName>Emergency Medicine</fullName>
+                <default>false</default>
+                <label>Emergency Medicine</label>
+            </value>
+            <value>
+                <fullName>Anesthesiology</fullName>
+                <default>false</default>
+                <label>Anesthesiology</label>
+            </value>
+            <value>
+                <fullName>Physical Medicine &amp; Rehabilitation</fullName>
+                <default>false</default>
+                <label>Physical Medicine &amp; Rehabilitation</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
