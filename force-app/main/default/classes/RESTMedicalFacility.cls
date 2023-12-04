@@ -1,5 +1,6 @@
 @RestResource(UrlMapping='/Medical_Facility__c/*')
 global with sharing class RESTMedicalFacility {
+
     @HttpGet
     global static void getFacilities() {
         List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, Geo_location__c, Opening_Hours__c FROM Medical_Facility__c];
