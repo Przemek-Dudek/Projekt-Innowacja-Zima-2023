@@ -1,43 +1,5 @@
 @RestResource(UrlMapping='/Medical_Facility__c/*')
 global with sharing class RESTMedicalFacility {
-    // @HttpGet
-    // global static void getFacilities() {
-    //     List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, Geo_location__c, Opening_Hours__c FROM Medical_Facility__c];
-    
-    //     List<FacilityWrapper> wrappers = new List<FacilityWrapper>();
-
-    //     List<Id> opHours = new List<Id>();
-        
-    //     for (Medical_Facility__c facility : facilities) {
-    //         opHours.add(facility.Opening_Hours__c);
-    //     }
-        
-    //     List<Opening_Hours__c> hours = [SELECT Monday_Open__c, Monday_Close__c, Tuesday_Open__c, Tuesday_Close__c, Wednesday_Open__c, Thursday_Open__c, Thursday_Close__c, Friday_Open__c, Friday_Close__c, Saturday_Open__c, Saturday_Close__c, Sunday_Open__c, Sunday_Close__c FROM Opening_Hours__c WHERE Id IN :opHours];
-    
-    //     for (Integer i = 0; i < facilities.size(); i++) { //Medical_Facility__c facility : facilities
-    //         FacilityWrapper wrapper = new FacilityWrapper();
-    //         wrapper.operatingHours = new List<String>();
-    //         Medical_Facility__c facility = facilities[i];
-
-    //         wrapper.id = facility.Id;
-    //         wrapper.name = facility.Name;
-    //         wrapper.address = facility.Address__c;
-    //         wrapper.geoLocation = facility.Geo_location__c;
-    //         wrapper.operatingHours.add(String.join('Monday:', hours[i].Monday_Open__c, ' - ', hours[i].Monday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Tuesday:', hours[i].Tuesday_Open__c, ' - ', hours[i].Tuesday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Wednesday:', hours[i].Wednesday_Open__c, ' - ', hours[i].Wednesday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Thursday:', hours[i].Thursday_Open__c, ' - ', hours[i].Thursday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Friday:', hours[i].Friday_Open__c, ' - ', hours[i].Friday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Saturday:', hours[i].Saturday_Open__c, ' - ', hours[i].Saturday_Close__c));
-    //         wrapper.operatingHours.add(String.join('Sunday:', hours[i].Sunday_Open__c, ' - ', hours[i].Sunday_Close__c));
-    
-    //         wrappers.add(wrapper);
-    //     }
-    
-    //     RestContext.response.statusCode = 200;
-    //     RestContext.response.responseBody = Blob.valueOf(JSON.serialize(wrappers));
-    // }
-
     @HttpGet
     global static void getFacilities() {
         List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, Geo_location__c, Opening_Hours__c FROM Medical_Facility__c];
