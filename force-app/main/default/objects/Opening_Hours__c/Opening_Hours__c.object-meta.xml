@@ -148,18 +148,19 @@
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
     <enableLicensing>false</enableLicensing>
-    <enableReports>true</enableReports>
-    <enableSearch>true</enableSearch>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
-    <label>Medical Facility</label>
+    <externalSharingModel>Private</externalSharingModel>
+    <label>Opening_Hours</label>
     <nameField>
-        <label>Medical Facility Name</label>
-        <type>Text</type>
+        <displayFormat>A-{0000}</displayFormat>
+        <label>Opening_Hours Name</label>
+        <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Medical Facilities</pluralLabel>
+    <pluralLabel>Opening_Hours</pluralLabel>
     <searchLayouts></searchLayouts>
-    <sharingModel>ControlledByParent</sharingModel>
+    <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
