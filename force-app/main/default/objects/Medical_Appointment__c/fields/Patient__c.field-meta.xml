@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Doctor__c</fullName>
+    <fullName>Patient__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>Prescription issued by a Doctor</description>
+    <description>Patient that will attend to the Appointment.</description>
     <externalId>false</externalId>
-    <label>Doctor</label>
+    <label>Patient</label>
     <referenceTo>Person__c</referenceTo>
-    <relationshipLabel>Prescriptions (Doctor)</relationshipLabel>
-    <relationshipName>Prescriptions1</relationshipName>
+    <relationshipLabel>Medical Appointments (Patient)</relationshipLabel>
+    <relationshipName>Medical_Appointments1</relationshipName>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
