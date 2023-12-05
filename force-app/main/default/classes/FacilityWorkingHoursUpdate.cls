@@ -1,21 +1,40 @@
-public with sharing class FacilityWorkingHoursUpdate implements Schedulable{
-    public void execute(SchedulableContext ctx) {
-        FacilityWorkingHoursUpdate.updateWorkingHours();
+public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Database.Batchable<SObject> {
+    public static final String JOB_NAME = 'Update workweeks';
+    public static final String CRON_EXPERSSION = '0 0 8 * * ?';
+
+    public static Id scheduleMe() {
+        FacilityWorkingHoursUpdate schedule = new FacilityWorkingHoursUpdate();
+        return System.schedule(
+          JOB_NAME,
+          CRON_EXPERSSION,
+          schedule
+        );
     }
 
-    public static void updateWorkingHours() {
-        List<Opening_Hours__c> hours = [
-            SELECT Monday_Open__c, Monday_Close__c, Tuesday_Open__c, Tuesday_Close__c,
-           Wednesday_Open__c, Wednesday_Close__c, Thursday_Open__c, Thursday_Close__c,
-           Friday_Open__c, Friday_Close__c, Saturday_Open__c, Saturday_Close__c,
-           Sunday_Open__c, Sunday_Close__c
-            FROM Opening_Hours__c];
+    public void execute(SchedulableContext ctx) {
+        Database.executeBatch(new FacilityWorkingHoursUpdate()); //200
+    }
 
-        for (Opening_Hours__c h : hours) {
+    //private final List<Opening_Hours__c> scopes = new List<Opening_Hours__c>();
+
+    public Database.QueryLocator start(Database.BatchableContext context) {
+        return Database.getQueryLocator([SELECT Id, Monday_Open__c, Monday_Close__c, Tuesday_Open__c, Tuesday_Close__c,
+                                        Wednesday_Open__c, Wednesday_Close__c, Thursday_Open__c, Thursday_Close__c,
+                                        Friday_Open__c, Friday_Close__c, Saturday_Open__c, Saturday_Close__c,
+                                        Sunday_Open__c, Sunday_Close__c FROM Opening_Hours__c]);
+    }
+
+    public void execute(Database.BatchableContext context, List<Opening_Hours__c> scope) {
+        for (Opening_Hours__c h : scope) {
             updateWorkweekRandomly(h);
         }
 
-        update hours;
+        update scope;
+        //scopes.addAll(scope);
+    }
+
+    public void finish(Database.BatchableContext context) {
+        //update scopes;
     }
 
     public static Time generateRandomTime() {
