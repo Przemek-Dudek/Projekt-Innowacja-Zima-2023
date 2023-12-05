@@ -3,7 +3,7 @@
     <fullName>date_of_issue__c</fullName>
     <externalId>false</externalId>
     <label>date of issue</label>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>DateTime</type>
 </CustomField>
