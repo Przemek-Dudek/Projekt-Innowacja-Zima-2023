@@ -19,26 +19,7 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityHelper 
            Sunday_Open__c, Sunday_Close__c
             FROM Opening_Hours__c WHERE Id IN :opHours];
 
-        for (Integer i = 0; i < facilities.size(); i++) {
-            FacilityWrapper wrapper = new FacilityWrapper();
-            wrapper.operatingHours = new List<String>();
-            Medical_Facility__c facility = facilities[i];
-
-            wrapper.id = facility.Id;
-            wrapper.name = facility.Name;
-            wrapper.address = facility.Address__c;
-            wrapper.geoLocation = facility.Geo_location__c;
-
-            wrapper.operatingHours.add('Monday ' + getTimeRangeAsString(hours[i].Monday_Open__c, hours[i].Monday_Close__c));
-            wrapper.operatingHours.add('Tuesday ' + getTimeRangeAsString(hours[i].Tuesday_Open__c, hours[i].Tuesday_Close__c));
-            wrapper.operatingHours.add('Wednesday ' + getTimeRangeAsString(hours[i].Wednesday_Open__c, hours[i].Wednesday_Close__c));
-            wrapper.operatingHours.add('Thursday ' + getTimeRangeAsString(hours[i].Thursday_Open__c, hours[i].Thursday_Close__c));
-            wrapper.operatingHours.add('Friday ' + getTimeRangeAsString(hours[i].Friday_Open__c, hours[i].Friday_Close__c));
-            wrapper.operatingHours.add('Saturday ' + getTimeRangeAsString(hours[i].Saturday_Open__c, hours[i].Saturday_Close__c));
-            wrapper.operatingHours.add('Sunday ' + getTimeRangeAsString(hours[i].Sunday_Open__c, hours[i].Sunday_Close__c));
-
-            wrappers.add(wrapper);
-        }
+        wrapFacilities(facilities, hours, wrappers);
 
         RestContext.response.statusCode = 200;
         RestContext.response.responseBody = Blob.valueOf(JSON.serialize(wrappers));     
@@ -97,6 +78,33 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityHelper 
             serchedHours.add(newDay);
         }
 
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(serchedHours));
+        List<Opening_Hours__c> hours = 
+            [SELECT Monday_Open__c, Monday_Close__c, Tuesday_Open__c, Tuesday_Close__c,
+            Wednesday_Open__c, Wednesday_Close__c, Thursday_Open__c, Thursday_Close__c,
+            Friday_Open__c, Friday_Close__c, Saturday_Open__c, Saturday_Close__c,
+            Sunday_Open__c, Sunday_Close__c FROM Opening_Hours__c];
+
+            List<Opening_Hours__c> correctHours = new List<Opening_Hours__c>();
+
+        for (Opening_Hours__c h : hours) {
+            for (Integer i = 0; i < serchedHours.size(); i++) {
+                if(!checkHour(h, serchedHours[i])) {
+                    break;
+                }
+
+                if(i == serchedHours.size()-1) {
+                    correctHours.add(h);
+                }
+            }
+        }
+
+        List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, Geo_location__c, Opening_Hours__c FROM Medical_Facility__c WHERE Opening_Hours__c IN :correctHours];
+
+        List<FacilityWrapper> wrappers = new List<FacilityWrapper>();
+
+        wrapFacilities(facilities, correctHours, wrappers);
+
+        RestContext.response.statusCode = 200;
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(wrappers));
     }
 }
