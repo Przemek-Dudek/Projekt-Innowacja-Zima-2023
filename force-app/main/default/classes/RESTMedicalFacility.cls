@@ -1,6 +1,5 @@
 @RestResource(UrlMapping='/Medical_Facility__c/*')
 global with sharing class RESTMedicalFacility extends RESTMedicalFacilityHelper {
-
     @HttpGet
     global static void getFacilities() {
         List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, Geo_location__c, Opening_Hours__c FROM Medical_Facility__c];
@@ -30,19 +29,19 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityHelper 
             wrapper.address = facility.Address__c;
             wrapper.geoLocation = facility.Geo_location__c;
 
-            wrapper.operatingHours.add('Monday: ' + getTimeRangeAsString(hours[i].Monday_Open__c, hours[i].Monday_Close__c));
-            wrapper.operatingHours.add('Tuesday: ' + getTimeRangeAsString(hours[i].Tuesday_Open__c, hours[i].Tuesday_Close__c));
-            wrapper.operatingHours.add('Wednesday: ' + getTimeRangeAsString(hours[i].Wednesday_Open__c, hours[i].Wednesday_Close__c));
-            wrapper.operatingHours.add('Thursday: ' + getTimeRangeAsString(hours[i].Thursday_Open__c, hours[i].Thursday_Close__c));
-            wrapper.operatingHours.add('Friday: ' + getTimeRangeAsString(hours[i].Friday_Open__c, hours[i].Friday_Close__c));
-            wrapper.operatingHours.add('Saturday: ' + getTimeRangeAsString(hours[i].Saturday_Open__c, hours[i].Saturday_Close__c));
-            wrapper.operatingHours.add('Sunday: ' + getTimeRangeAsString(hours[i].Sunday_Open__c, hours[i].Sunday_Close__c));
+            wrapper.operatingHours.add('Monday ' + getTimeRangeAsString(hours[i].Monday_Open__c, hours[i].Monday_Close__c));
+            wrapper.operatingHours.add('Tuesday ' + getTimeRangeAsString(hours[i].Tuesday_Open__c, hours[i].Tuesday_Close__c));
+            wrapper.operatingHours.add('Wednesday ' + getTimeRangeAsString(hours[i].Wednesday_Open__c, hours[i].Wednesday_Close__c));
+            wrapper.operatingHours.add('Thursday ' + getTimeRangeAsString(hours[i].Thursday_Open__c, hours[i].Thursday_Close__c));
+            wrapper.operatingHours.add('Friday ' + getTimeRangeAsString(hours[i].Friday_Open__c, hours[i].Friday_Close__c));
+            wrapper.operatingHours.add('Saturday ' + getTimeRangeAsString(hours[i].Saturday_Open__c, hours[i].Saturday_Close__c));
+            wrapper.operatingHours.add('Sunday ' + getTimeRangeAsString(hours[i].Sunday_Open__c, hours[i].Sunday_Close__c));
 
             wrappers.add(wrapper);
         }
 
         RestContext.response.statusCode = 200;
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(wrappers));
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(wrappers));     
     }
 
     @HttpPut
@@ -51,17 +50,53 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityHelper 
 
         if (jsonBody.startsWith('[')) {
             List<FacilityWrapper> wrappers = (List<FacilityWrapper>) JSON.deserialize(jsonBody, List<FacilityWrapper>.class);
-            updateFacilities(wrappers);
+            try {
+                updateFacilities(wrappers);
+            } catch (Exception e) {
+                RestContext.response.statusCode = 400;
+                RestContext.response.responseBody = Blob.valueOf(e.getMessage());
+                return;
+            }
+            
         } else {
             FacilityWrapper wrapper = (FacilityWrapper) JSON.deserialize(jsonBody, FacilityWrapper.class);
-            updateFacility(wrapper);
+            try {
+                updateFacility(wrapper);
+            } catch (Exception e) {
+                RestContext.response.statusCode = 400;
+                RestContext.response.responseBody = Blob.valueOf(e.getMessage());
+                return;
+            }
         }
 
         RestContext.response.statusCode = 200;
     }
 
-    // @HttpPost
-    // global static void postFacility() {
-        
-    // }
+    @HttpPost
+    global static void postFacility() {
+        String jsonBody = RestContext.request.requestBody.toString();
+        FacilityWrapper wrapper = (FacilityWrapper) JSON.deserialize(jsonBody, FacilityWrapper.class);
+
+        List<DaysAndHours> serchedHours = new List<DaysAndHours>();
+
+        for (String str : wrapper.operatingHours) {
+            DaysAndHours newDay = new DaysAndHours();
+            
+            List<String> strSplit = str.split('-|\\s', 5);
+
+            if(strSplit.size() == 3) {
+                newDay.day = strSplit[0];
+                newDay.open = getTimeFromString(strSplit[1]);
+                newDay.close = getTimeFromString(strSplit[2]);
+            } else {
+                RestContext.response.statusCode = 400;
+                RestContext.response.responseBody = Blob.valueOf('Incorrect input string: ' + str);
+                return;
+            }
+            
+            serchedHours.add(newDay);
+        }
+
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(serchedHours));
+    }
 }
