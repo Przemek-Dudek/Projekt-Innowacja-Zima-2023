@@ -46,7 +46,6 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
 
         List<Medical_Facility__c> facilitiesToUpdate = new List<Medical_Facility__c>();
         
-        //w pętli pozastępować dane z Bazy na te z wraperów, potem dodać do listy do updateu
         for (FacilityWrapper facility : facilityWrappers) {
             Medical_Facility__c tmp = facilities.get(facility.Id);
 
@@ -58,8 +57,37 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
                 tmp.Address__c = facility.address;
             }
 
-            if(facility.operatingHours != NULL) {
-                //update Hours
+            if (facility.operatingHours != null) {
+                List<Operating_Hours__c> operatingHoursToUpdate = new List<Operating_Hours__c>();
+    
+                for (String dayOfWeek : facility.operatingHours.keySet()) {
+                    HourWrapper hours = facility.operatingHours.get(dayOfWeek);
+    
+                    Operating_Hours__c operatingHour = null;
+                    for (Operating_Hours__c tmpOperatingHour : tmp.Operating_Hours__r) {
+                        if (tmpOperatingHour.Day_of_Week__c == dayOfWeek) {
+                            operatingHour = tmpOperatingHour;
+                            break;
+                        }
+                    }
+    
+                    if (operatingHour != null) {
+                        operatingHour.Opening_Time__c = hours.openingHour;
+                        operatingHour.Closing_Time__c = hours.closingHour;
+                        operatingHoursToUpdate.add(operatingHour);
+                    } else {
+                        operatingHoursToUpdate.add(new Operating_Hours__c(
+                            Day_of_Week__c = dayOfWeek,
+                            Opening_Time__c = hours.openingHour,
+                            Closing_Time__c = hours.closingHour,
+                            Medical_Facility__c = tmp.Id
+                        ));
+                    }
+                }
+    
+                if (!operatingHoursToUpdate.isEmpty()) {
+                    upsert operatingHoursToUpdate;
+                }
             }
 
             facilitiesToUpdate.add(tmp);
