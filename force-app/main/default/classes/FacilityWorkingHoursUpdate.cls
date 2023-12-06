@@ -1,6 +1,6 @@
 public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Database.Batchable<SObject> {
     public static final String JOB_NAME = 'Update workweeks';
-    public static final String CRON_EXPERSSION = '0 0 8 * * ?';
+    public static final String CRON_EXPERSSION = '0 0 1 * * ?';
 
     public static Id scheduleMe() {
         FacilityWorkingHoursUpdate schedule = new FacilityWorkingHoursUpdate();
@@ -12,10 +12,8 @@ public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Dat
     }
 
     public void execute(SchedulableContext ctx) {
-        Database.executeBatch(new FacilityWorkingHoursUpdate()); //200
+        Database.executeBatch(new FacilityWorkingHoursUpdate());
     }
-
-    //private final List<Opening_Hours__c> scopes = new List<Opening_Hours__c>();
 
     public Database.QueryLocator start(Database.BatchableContext context) {
         return Database.getQueryLocator([SELECT Id, Monday_Open__c, Monday_Close__c, Tuesday_Open__c, Tuesday_Close__c,
@@ -30,12 +28,9 @@ public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Dat
         }
 
         update scope;
-        //scopes.addAll(scope);
     }
 
-    public void finish(Database.BatchableContext context) {
-        //update scopes;
-    }
+    public void finish(Database.BatchableContext context) {}
 
     public static Time generateRandomTime() {
         Integer randomHour = Math.mod(Math.abs(Crypto.getRandomInteger()), 12);
