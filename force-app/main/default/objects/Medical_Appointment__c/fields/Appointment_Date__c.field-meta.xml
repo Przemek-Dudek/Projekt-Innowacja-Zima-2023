@@ -3,7 +3,7 @@
     <fullName>Appointment_Date__c</fullName>
     <externalId>false</externalId>
     <label>Appointment Date</label>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>DateTime</type>
 </CustomField>
