@@ -153,7 +153,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Medical_Insurance__c.Date_of_conclusion__c</field>
+        <field>Medical_Insurance__c.Date_Of_Conclusion__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

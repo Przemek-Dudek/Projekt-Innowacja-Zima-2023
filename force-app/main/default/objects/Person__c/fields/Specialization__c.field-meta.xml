@@ -11,104 +11,24 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Cardiology</fullName>
+                <fullName>Internist</fullName>
                 <default>false</default>
-                <label>Cardiology</label>
+                <label>Internist</label>
             </value>
             <value>
-                <fullName>Dermatology</fullName>
+                <fullName>Cardiologist</fullName>
                 <default>false</default>
-                <label>Dermatology</label>
+                <label>Cardiologist</label>
             </value>
             <value>
-                <fullName>Endocrinology</fullName>
+                <fullName>Allergist</fullName>
                 <default>false</default>
-                <label>Endocrinology</label>
+                <label>Allergist</label>
             </value>
             <value>
-                <fullName>Gastroenterology</fullName>
+                <fullName>Laryngologist</fullName>
                 <default>false</default>
-                <label>Gastroenterology</label>
-            </value>
-            <value>
-                <fullName>Hematology</fullName>
-                <default>false</default>
-                <label>Hematology</label>
-            </value>
-            <value>
-                <fullName>Neurology</fullName>
-                <default>false</default>
-                <label>Neurology</label>
-            </value>
-            <value>
-                <fullName>Oncology</fullName>
-                <default>false</default>
-                <label>Oncology</label>
-            </value>
-            <value>
-                <fullName>Orthopedics</fullName>
-                <default>false</default>
-                <label>Orthopedics</label>
-            </value>
-            <value>
-                <fullName>Pediatrics</fullName>
-                <default>false</default>
-                <label>Pediatrics</label>
-            </value>
-            <value>
-                <fullName>Psychiatry</fullName>
-                <default>false</default>
-                <label>Psychiatry</label>
-            </value>
-            <value>
-                <fullName>Pulmonology</fullName>
-                <default>false</default>
-                <label>Pulmonology</label>
-            </value>
-            <value>
-                <fullName>Rheumatology</fullName>
-                <default>false</default>
-                <label>Rheumatology</label>
-            </value>
-            <value>
-                <fullName>Urology</fullName>
-                <default>false</default>
-                <label>Urology</label>
-            </value>
-            <value>
-                <fullName>Ophthalmology</fullName>
-                <default>false</default>
-                <label>Ophthalmology</label>
-            </value>
-            <value>
-                <fullName>Obstetrics &amp; Gynecology</fullName>
-                <default>false</default>
-                <label>Obstetrics &amp; Gynecology</label>
-            </value>
-            <value>
-                <fullName>Allergy &amp; Immunology</fullName>
-                <default>false</default>
-                <label>Allergy &amp; Immunology</label>
-            </value>
-            <value>
-                <fullName>Infectious Disease</fullName>
-                <default>false</default>
-                <label>Infectious Disease</label>
-            </value>
-            <value>
-                <fullName>Emergency Medicine</fullName>
-                <default>false</default>
-                <label>Emergency Medicine</label>
-            </value>
-            <value>
-                <fullName>Anesthesiology</fullName>
-                <default>false</default>
-                <label>Anesthesiology</label>
-            </value>
-            <value>
-                <fullName>Physical Medicine &amp; Rehabilitation</fullName>
-                <default>false</default>
-                <label>Physical Medicine &amp; Rehabilitation</label>
+                <label>Laryngologist</label>
             </value>
         </valueSetDefinition>
     </valueSet>
