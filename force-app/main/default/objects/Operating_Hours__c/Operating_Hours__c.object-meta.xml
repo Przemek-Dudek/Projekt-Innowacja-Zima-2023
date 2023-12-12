@@ -153,13 +153,13 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
-    <label>Opening_Hours</label>
+    <label>Operating Hours</label>
     <nameField>
         <displayFormat>A-{0000}</displayFormat>
-        <label>Opening_Hours Name</label>
+        <label>Operating Hours Name</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Opening_Hours</pluralLabel>
+    <pluralLabel>Operating Hours</pluralLabel>
     <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
