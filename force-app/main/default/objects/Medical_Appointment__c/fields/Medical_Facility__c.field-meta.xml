@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Medical_Facility__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Medical Facility at which our Appointment will take place.</description>
+    <externalId>false</externalId>
+    <label>Medical Facility</label>
+    <referenceTo>Medical_Facility__c</referenceTo>
+    <relationshipLabel>Medical Appointments</relationshipLabel>
+    <relationshipName>Medical_Appointments</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
