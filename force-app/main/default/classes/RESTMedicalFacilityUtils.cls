@@ -20,11 +20,11 @@ public with sharing virtual class RESTMedicalFacilityUtils {
     public class Address {
         public String street_name;
         public String city;
-        public Integer flat_number;
-        public Integer street_number;
-        public Integer postcode;
-
-        public Address(String street_name, String city, Integer flat_number, Integer street_number, Integer postcode) {
+        public Decimal flat_number;
+        public Decimal street_number;
+        public String postcode;
+    
+        public Address(String street_name, String city, Decimal flat_number, Decimal street_number, String postcode) {
             this.street_name = street_name;
             this.city = city;
             this.flat_number = flat_number;
@@ -50,12 +50,20 @@ public with sharing virtual class RESTMedicalFacilityUtils {
         List<FacilityWrapper> facilityWrappers = new List<FacilityWrapper>();
 
         for (Medical_Facility__c facility : facilities) {
+            Address facilityAddress = new Address(
+                facility.Street_Name__c,
+                facility.City__c,
+                facility.Flat_Number__c,
+                facility.Street_Number__c,
+                facility.Postcode__c
+            );
+        
             FacilityWrapper wrapper = new FacilityWrapper(
                 facility.Id,
                 facility.Name,
-                facility.Address__c
+                facilityAddress
             );
-    
+        
             for (Operating_Hours__c operatingHours : facility.Operating_Hours__r) {
                 wrapper.addOperatingHours(
                     operatingHours.Day_of_Week__c,
@@ -63,7 +71,7 @@ public with sharing virtual class RESTMedicalFacilityUtils {
                     operatingHours.Closing_Time__c
                 );
             }
-    
+        
             facilityWrappers.add(wrapper);
         }
 
@@ -73,10 +81,6 @@ public with sharing virtual class RESTMedicalFacilityUtils {
     public static void updateFacility(FacilityWrapper facility, Medical_Facility__c tmp) {
         if(facility.name != NULL) {
             tmp.name = facility.name;
-        }
-
-        if(facility.address != NULL) {
-            tmp.Address__c = facility.address;
         }
 
         if (facility.operatingHours != null) {
