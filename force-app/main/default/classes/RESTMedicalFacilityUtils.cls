@@ -32,7 +32,7 @@ public with sharing virtual class RESTMedicalFacilityUtils {
             this.postcode = postcode;
         }
     }
-
+    
     public class HourWrapper {
         public Time openingHour;
         public Time closingHour;
