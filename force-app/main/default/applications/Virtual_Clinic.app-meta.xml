@@ -12,6 +12,11 @@
     <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
     <label>Virtual Clinic</label>
     <navType>Standard</navType>
+    <tabs>Medical_Appointment__c</tabs>
+    <tabs>Medical_Facility__c</tabs>
+    <tabs>Medical_Insurance__c</tabs>
+    <tabs>Person__c</tabs>
+    <tabs>Prescription__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Virtual_Clinic_UtilityBar</utilityBar>
 </CustomApplication>
