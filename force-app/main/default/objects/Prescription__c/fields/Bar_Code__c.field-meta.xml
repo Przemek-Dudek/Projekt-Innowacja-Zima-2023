@@ -3,10 +3,9 @@
     <fullName>Bar_Code__c</fullName>
     <externalId>false</externalId>
     <label>Bar Code</label>
-    <precision>13</precision>
-    <required>true</required>
-    <scale>0</scale>
+    <length>13</length>
+    <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>Number</type>
+    <type>Text</type>
     <unique>false</unique>
 </CustomField>

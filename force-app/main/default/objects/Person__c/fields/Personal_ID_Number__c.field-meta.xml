@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>expiry_date__c</fullName>
+    <fullName>Personal_ID_Number__c</fullName>
+    <description>PESEL number</description>
     <externalId>false</externalId>
-    <label>expiry date</label>
+    <label>Personal ID Number</label>
+    <length>11</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
-    <type>DateTime</type>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>

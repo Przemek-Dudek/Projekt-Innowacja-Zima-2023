@@ -4,7 +4,7 @@
     <externalId>false</externalId>
     <label>Address</label>
     <length>100</length>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
