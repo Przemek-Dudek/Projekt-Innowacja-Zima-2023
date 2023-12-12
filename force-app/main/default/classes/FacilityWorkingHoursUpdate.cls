@@ -1,9 +1,9 @@
-public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Database.Batchable<SObject> {
+public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Database.Batchable<SObject>, Database.Stateful {
     public static final String JOB_NAME = 'Update workweeks';
     public static final String CRON_EXPERSSION = '0 0 1 * * ?';
 
-    private static Set<Id> errorToIDs = new Set<Id>();
-    private static Boolean isUpdateSuccessful = true;
+    private Set<Id> errorToIDs = new Set<Id>();
+    private Boolean isUpdateSuccessful = true;
 
     public static Id scheduleMe() {
         FacilityWorkingHoursUpdate schedule = new FacilityWorkingHoursUpdate();
