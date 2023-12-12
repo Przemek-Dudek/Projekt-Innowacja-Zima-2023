@@ -42,10 +42,8 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
         String jsonBody = RestContext.request.requestBody.toString();
         List<FacilityWrapper> facilityWrappers = (List<FacilityWrapper>) JSON.deserialize(jsonBody, List<FacilityWrapper>.class);
 
-        // Retrieve all facilities to filter based on opening hours
         List<FacilityWrapper> allFacilities = listFacilities();
 
-        // Filter facilities based on the provided opening hours
         List<FacilityWrapper> openFacilities = new List<FacilityWrapper>();
 
         for (FacilityWrapper facility : allFacilities) {
