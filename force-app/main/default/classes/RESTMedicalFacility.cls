@@ -20,7 +20,7 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
             facilityIds.add(wrapper.Id);
         }
 
-        Map<Id, Medical_Facility__c> facilities = new Map<ID, Medical_Facility__c>([SELECT Id, Name, Address__c, 
+        Map<Id, Medical_Facility__c> facilities = new Map<ID, Medical_Facility__c>([SELECT Id, Name, City__c, Flat_Number__c, Postcode__c, Street_Name__c, Street_Number__c, 
         (SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c WHERE Id IN :facilityids]);
 
         List<Medical_Facility__c> facilitiesToUpdate = new List<Medical_Facility__c>();

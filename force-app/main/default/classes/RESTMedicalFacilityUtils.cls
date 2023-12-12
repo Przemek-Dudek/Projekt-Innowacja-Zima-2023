@@ -2,10 +2,10 @@ public with sharing virtual class RESTMedicalFacilityUtils {
     public class FacilityWrapper {
         public String id;
         public String name;
-        public String address;
+        public Address address;
         public Map<String, HourWrapper> operatingHours;
 
-        public FacilityWrapper(String id, String name, String address) {
+        public FacilityWrapper(String id, String name, Address address) {
             this.id = id;
             this.name = name;
             this.address = address;
@@ -14,6 +14,22 @@ public with sharing virtual class RESTMedicalFacilityUtils {
 
         public void addOperatingHours(String dayOfWeek, Time openingHour, Time closingHour) {
             this.operatingHours.put(dayOfWeek, new HourWrapper(openingHour, closingHour));
+        }
+    }
+
+    public class Address {
+        public String street_name;
+        public String city;
+        public Integer flat_number;
+        public Integer street_number;
+        public Integer postcode;
+
+        public Address(String street_name, String city, Integer flat_number, Integer street_number, Integer postcode) {
+            this.street_name = street_name;
+            this.city = city;
+            this.flat_number = flat_number;
+            this.street_number = street_number;
+            this.postcode = postcode;
         }
     }
 
@@ -28,7 +44,7 @@ public with sharing virtual class RESTMedicalFacilityUtils {
     }
 
     public static List<FacilityWrapper> listFacilities() {
-        List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, 
+        List<Medical_Facility__c> facilities = [SELECT Id, Name, City__c, Flat_Number__c, Postcode__c, Street_Name__c, Street_Number__c, 
         (SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c];
 
         List<FacilityWrapper> facilityWrappers = new List<FacilityWrapper>();
