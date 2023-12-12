@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Type_of_Record__c</fullName>
-    <description>Checks if it is a patient record or the doctor record</description>
+    <fullName>Type__c</fullName>
     <externalId>false</externalId>
-    <label>Type of Record</label>
-    <required>true</required>
+    <label>Type</label>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
@@ -12,14 +11,14 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Doctor</fullName>
+                <fullName>Hospital</fullName>
                 <default>false</default>
-                <label>Doctor</label>
+                <label>Hospital</label>
             </value>
             <value>
-                <fullName>Patient</fullName>
+                <fullName>Clinic</fullName>
                 <default>false</default>
-                <label>Patient</label>
+                <label>Clinic</label>
             </value>
         </valueSetDefinition>
     </valueSet>
