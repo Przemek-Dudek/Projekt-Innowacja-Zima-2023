@@ -163,7 +163,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Medical_Insurance__c.Insurance_ammount__c</field>
+        <field>Medical_Insurance__c.Insurance_Amount__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
