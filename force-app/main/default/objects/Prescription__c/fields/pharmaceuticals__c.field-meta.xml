@@ -4,7 +4,7 @@
     <description>List of pharmaceuticals</description>
     <externalId>false</externalId>
     <label>pharmaceuticals</label>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>TextArea</type>
 </CustomField>
