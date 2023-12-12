@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Medical_Insurance__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Person&apos;s Medical Incurance</description>
+    <externalId>false</externalId>
+    <label>Medical Insurance</label>
+    <referenceTo>Medical_Insurance__c</referenceTo>
+    <relationshipLabel>People</relationshipLabel>
+    <relationshipName>People</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
