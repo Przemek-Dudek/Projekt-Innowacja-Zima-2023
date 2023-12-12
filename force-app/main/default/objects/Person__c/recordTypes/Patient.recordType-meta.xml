@@ -6,83 +6,19 @@
     <picklistValues>
         <picklist>Specialization__c</picklist>
         <values>
-            <fullName>Allergy %26 Immunology</fullName>
+            <fullName>Allergist</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Anesthesiology</fullName>
+            <fullName>Cardiologist</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Cardiology</fullName>
+            <fullName>Internist</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Dermatology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Emergency Medicine</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Endocrinology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Gastroenterology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Hematology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Infectious Disease</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Neurology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Obstetrics %26 Gynecology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Oncology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Ophthalmology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Orthopedics</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Pediatrics</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Physical Medicine %26 Rehabilitation</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Psychiatry</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Pulmonology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Rheumatology</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Urology</fullName>
+            <fullName>Laryngologist</fullName>
             <default>false</default>
         </values>
     </picklistValues>

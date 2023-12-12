@@ -166,6 +166,9 @@
         <editable>false</editable>
         <field>Medical_Facility__c.Flat_Number__c</field>
         <readable>false</readable>
+        <editable>true</editable>
+        <field>Medical_Insurance__c.Date_Of_Conclusion__c</field>
+        <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
