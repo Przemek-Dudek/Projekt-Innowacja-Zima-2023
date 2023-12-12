@@ -27,147 +27,103 @@ public with sharing virtual class RESTMedicalFacilityUtils {
         }
     }
 
+    public static List<FacilityWrapper> listFacilities() {
+        List<Medical_Facility__c> facilities = [SELECT Id, Name, Address__c, 
+        (SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c];
+
+        List<FacilityWrapper> facilityWrappers = new List<FacilityWrapper>();
+
+        for (Medical_Facility__c facility : facilities) {
+            FacilityWrapper wrapper = new FacilityWrapper(
+                facility.Id,
+                facility.Name,
+                facility.Address__c
+            );
     
+            for (Operating_Hours__c operatingHours : facility.Operating_Hours__r) {
+                wrapper.addOperatingHours(
+                    operatingHours.Day_of_Week__c,
+                    operatingHours.Opening_Time__c,
+                    operatingHours.Closing_Time__c
+                );
+            }
+    
+            facilityWrappers.add(wrapper);
+        }
+
+        return facilityWrappers;
+    }
+
+    public static void updateFacility(FacilityWrapper facility, Medical_Facility__c tmp) {
+        if(facility.name != NULL) {
+            tmp.name = facility.name;
+        }
+
+        if(facility.address != NULL) {
+            tmp.Address__c = facility.address;
+        }
+
+        if (facility.operatingHours != null) {
+            List<Operating_Hours__c> operatingHoursToUpdate = new List<Operating_Hours__c>();
+
+            upsertHours(operatingHoursToUpdate, facility, tmp);
+
+            if (!operatingHoursToUpdate.isEmpty()) {
+                upsert operatingHoursToUpdate;
+            }
+        }
+    }
+
+    public static void upsertHours(List<Operating_Hours__c> operatingHoursToUpdate, FacilityWrapper facility, Medical_Facility__c tmp) {
+        for (String dayOfWeek : facility.operatingHours.keySet()) {
+            HourWrapper hours = facility.operatingHours.get(dayOfWeek);
+
+            Operating_Hours__c operatingHour = null;
+            for (Operating_Hours__c tmpOperatingHour : tmp.Operating_Hours__r) {
+                if (tmpOperatingHour.Day_of_Week__c == dayOfWeek) {
+                    operatingHour = tmpOperatingHour;
+                    break;
+                }
+            }
+
+            if (operatingHour != null) {
+                operatingHour.Opening_Time__c = hours.openingHour;
+                operatingHour.Closing_Time__c = hours.closingHour;
+                operatingHoursToUpdate.add(operatingHour);
+            } else {
+                operatingHoursToUpdate.add(new Operating_Hours__c(
+                    Day_of_Week__c = dayOfWeek,
+                    Opening_Time__c = hours.openingHour,
+                    Closing_Time__c = hours.closingHour,
+                    Medical_Facility__c = tmp.Id
+                ));
+            }
+        }
+    }
+
+    public static Boolean isFacilityOpen(FacilityWrapper facility, List<FacilityWrapper> openingHoursToCheck) {
+        for (FacilityWrapper openingHours : openingHoursToCheck) {
+            if (facilityMatchesCriteria(facility, openingHours)) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
+    public static Boolean facilityMatchesCriteria(FacilityWrapper facility, FacilityWrapper openingHours) {
+        for (String dayOfWeek : openingHours.operatingHours.keySet()) {
+            HourWrapper facilityHours = facility.operatingHours.get(dayOfWeek);
+            HourWrapper openingHoursForDay = openingHours.operatingHours.get(dayOfWeek);
+    
+            if (facilityHours != null && openingHoursForDay != null) {
+                if (!(facilityHours.openingHour >= openingHoursForDay.openingHour
+                    && facilityHours.closingHour <= openingHoursForDay.closingHour)) {
+                    return false;
+                }
+            }
+        }
+    
+        return true;
+    }
 }
-
-// public with sharing virtual class RESTMedicalFacilityUtils {
-//     public class FacilityWrapper {
-//         public String id;
-//         public String name;
-//         public String address;
-//         public Location geoLocation;
-//         public List<String> operatingHours;
-//     }
-
-//     public class DaysAndHours {
-//         public String day;
-//         public Time open;
-//         public Time close;
-//     }
-
-//     public class IncorrectDayException extends Exception {}
-//     public class IncorrectStatementException extends Exception {}
-
-//     public static String getTimeRangeAsString(Time openTime, Time closeTime) {
-//         String formattedOpenTime = String.valueOf(openTime).substring(0, 5);
-//         String formattedCloseTime = String.valueOf(closeTime).substring(0, 5);
-//         return formattedOpenTime + '-' + formattedCloseTime;
-//     }
-
-//     public static Time getTimeFromString(String timeStr) {
-//         String[] strTimeSplit = timeStr.split(':');
-//         Time t = Time.newInstance(Integer.valueOf(strTimeSplit[0]), Integer.valueOf(strTimeSplit[1]), 0, 0);
-
-//         return t;
-//     }
-
-//     public static void wrapFacilities(List<Medical_Facility__c> facilities, List<Opening_Hours__c> hours, List<FacilityWrapper> wrappers) {
-//         for (Integer i = 0; i < facilities.size(); i++) {
-//             FacilityWrapper wrapper = new FacilityWrapper();
-//             wrapper.operatingHours = new List<String>();
-//             Medical_Facility__c facility = facilities[i];
-
-//             wrapper.id = facility.Id;
-//             wrapper.name = facility.Name;
-//             wrapper.address = facility.Address__c;
-//             wrapper.geoLocation = facility.Geo_location__c;
-
-//             wrapper.operatingHours.add('Monday ' + getTimeRangeAsString(hours[i].Monday_Open__c, hours[i].Monday_Close__c));
-//             wrapper.operatingHours.add('Tuesday ' + getTimeRangeAsString(hours[i].Tuesday_Open__c, hours[i].Tuesday_Close__c));
-//             wrapper.operatingHours.add('Wednesday ' + getTimeRangeAsString(hours[i].Wednesday_Open__c, hours[i].Wednesday_Close__c));
-//             wrapper.operatingHours.add('Thursday ' + getTimeRangeAsString(hours[i].Thursday_Open__c, hours[i].Thursday_Close__c));
-//             wrapper.operatingHours.add('Friday ' + getTimeRangeAsString(hours[i].Friday_Open__c, hours[i].Friday_Close__c));
-//             wrapper.operatingHours.add('Saturday ' + getTimeRangeAsString(hours[i].Saturday_Open__c, hours[i].Saturday_Close__c));
-//             wrapper.operatingHours.add('Sunday ' + getTimeRangeAsString(hours[i].Sunday_Open__c, hours[i].Sunday_Close__c));
-
-//             wrappers.add(wrapper);
-//         }
-//     }
-
-//     public static void updateHour(Opening_Hours__c opHours, DaysAndHours dayTime) {
-//         switch on dayTime.day {
-//             when 'Monday' {
-//                 opHours.Monday_Open__c = dayTime.open;
-//                 opHours.Monday_Close__c = dayTime.close;
-//             }
-//             when 'Tuesday' {
-//                 opHours.Tuesday_Open__c = dayTime.open;
-//                 opHours.Tuesday_Close__c = dayTime.close;
-//             }
-//             when 'Wednesday' {
-//                 opHours.Wednesday_Open__c = dayTime.open;
-//                 opHours.Wednesday_Close__c = dayTime.close;
-//             }
-//             when 'Thursday' {
-//                 opHours.Thursday_Open__c = dayTime.open;
-//                 opHours.Thursday_Close__c = dayTime.close;
-//             }
-//             when 'Friday' {
-//                 opHours.Friday_Open__c = dayTime.open;
-//                 opHours.Friday_Close__c = dayTime.close;
-//             }
-//             when 'Saturday' {
-//                 opHours.Saturday_Open__c = dayTime.open;
-//                 opHours.Saturday_Close__c = dayTime.close;
-//             }
-//             when 'Sunday' {
-//                 opHours.Sunday_Open__c = dayTime.open;
-//                 opHours.Sunday_Close__c = dayTime.close;
-//             }
-//             when else {
-//                 throw new IncorrectDayException('Incorrect day: ' + dayTime.day);
-//             }
-//         }
-//     }
-
-//     public static void updateHours(Opening_Hours__c opHours, FacilityWrapper wrapper) {
-//         for (String str : wrapper.operatingHours) {
-//             DaysAndHours newDay = new DaysAndHours();
-        
-//             List<String> strSplit = str.split('-|\\s', 5);
-
-//             if(strSplit.size() == 3) {
-//                 newDay.day = strSplit[0];
-//                 newDay.open = getTimeFromString(strSplit[1]);
-//                 newDay.close = getTimeFromString(strSplit[2]);
-//             } else {
-//                 throw new IncorrectStatementException('Incorrect statement: ' + str);
-//             }
-
-//             try {
-//                 updateHour(opHours, newDay);
-//             } catch (IncorrectDayException e) {
-//                 throw e;
-//             }
-//         }
-//     }
-
-//     public static Boolean checkHour(Opening_Hours__c opHours, DaysAndHours dayTime) {
-//         switch on dayTime.day {
-//             when 'Monday' {
-//                 return opHours.Monday_Open__c <= dayTime.open && opHours.Monday_Close__c >= dayTime.close;
-//             }
-//             when 'Tuesday' {
-//                 return opHours.Tuesday_Open__c <= dayTime.open && opHours.Tuesday_Close__c >= dayTime.close;
-//             }
-//             when 'Wednesday' {
-//                 return opHours.Wednesday_Open__c <= dayTime.open && opHours.Wednesday_Close__c >= dayTime.close;
-//             }
-//             when 'Thursday' {
-//                 return opHours.Thursday_Open__c <= dayTime.open && opHours.Thursday_Close__c >= dayTime.close;
-//             }
-//             when 'Friday' {
-//                 return opHours.Friday_Open__c <= dayTime.open && opHours.Friday_Close__c >= dayTime.close;
-//             }
-//             when 'Saturday' {
-//                 return opHours.Saturday_Open__c <= dayTime.open && opHours.Saturday_Close__c >= dayTime.close;
-//             }
-//             when 'Sunday' {
-//                 return opHours.Sunday_Open__c <= dayTime.open && opHours.Sunday_Close__c >= dayTime.close;
-//             }
-//             when else {
-//                 throw new IncorrectDayException('Incorrect day: ' + dayTime.day);
-//             }
-//         }
-//     }
-// }
