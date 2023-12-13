@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Personal_Data_Consent__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Consent to process personal data</description>
+    <externalId>false</externalId>
+    <label>Personal Data Consent</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Doctors_List__c</fullName>
+    <description>A list of Doctors in Medical Facility</description>
+    <externalId>false</externalId>
+    <label>Doctors List</label>
+    <referenceTo>Person__c</referenceTo>
+    <relationshipLabel>Medical Facilitys</relationshipLabel>
+    <relationshipName>Medical_Facilitys</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
