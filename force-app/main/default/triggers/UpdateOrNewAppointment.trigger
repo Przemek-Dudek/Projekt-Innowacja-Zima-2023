@@ -7,10 +7,10 @@ trigger UpdateOrNewAppointment on Medical_Appointment__c (after insert, after up
     
     Map<String, Person__c> patientDetails = new Map<String, Person__c>();
     
-    List<Person__c> listOfPatients =  [SELECT Email__c, Personal_ID_Number__c, First_Name__c, LastName__c FROM Person__c WHERE Personal_ID_Number__c IN :patientPersonalIDs];
+    List<Person__c> listOfPatients =  [SELECT Email__c, Personal_ID_Number__c, First_Name__c, LastName__c FROM Person__c WHERE Id IN :patientPersonalIDs];
 
     for(Person__c person : listOfPatients) {
-        patientDetails.put(person.Personal_ID_Number__c, person);
+        patientDetails.put(person.Id, person);
     }
 
     List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
@@ -22,16 +22,21 @@ trigger UpdateOrNewAppointment on Medical_Appointment__c (after insert, after up
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
             mail.setToAddresses(new List<String>{ patient.Email__c });
             mail.setSubject('Your Medical Appointment has been updated!');
-            mail.setPlainTextBody('Medical Appointment created or updated.\n\nDetails:\nDate: ' + appointment.Appointment_Date__c +
-                                 '\nPatient: ' + patientName +
-                                 '\nMedical Facility: ' + appointment.Medical_Facility__c +
-                                 '\nStatus: ' + appointment.Status__c +
-                                 '\nSurgery: ' + appointment.Surgery__c);
+
+            String build = String.format('Medical Appointment created or updated.\n Details:\nDate: {0}\nPatient: {1}\nStatus: {2}\nSurgery: {3}',
+                new List<Object> {
+                    appointment.Appointment_Date__c,
+                    patientName,
+                    appointment.Status__c,
+                    appointment.Surgery__c
+                }
+            );
+
+            mail.setPlainTextBody(build); 
             emails.add(mail);
         }
     }
     
-    if (!emails.isEmpty()) {
-        Messaging.sendEmail(emails);
-    }
+
+    Messaging.sendEmail(emails);
 }
