@@ -29,17 +29,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Medical_Appointment__c.Doctor__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Medical_Appointment__c.Medical_Facility__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Medical_Appointment__c.Patient__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -50,11 +40,6 @@
     <fieldPermissions>
         <editable>true</editable>
         <field>Medical_Appointment__c.Surgery__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>Medical_Facility__c.Address__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -90,16 +75,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Medical_Facility__c.Type__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Medical_Facility__c.closeHour__c</field>
-        <readable>false</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>Medical_Facility__c.openHours__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -348,7 +323,6 @@
         <visible>true</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
-        <default>true</default>
         <recordType>Person__c.Doctor</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>

@@ -27,8 +27,13 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
         
         for (FacilityWrapper facility : facilityWrappers) {
             Medical_Facility__c tmp = facilities.get(facility.Id);
+            List<Operating_Hours__c> operatingHoursToUpdate = new List<Operating_Hours__c>();
 
-            updateFacility(facility, tmp);
+            updateFacility(facility, tmp, operatingHoursToUpdate);
+
+            if (!operatingHoursToUpdate.isEmpty()) {
+                upsert operatingHoursToUpdate; //wyniosłem wyzej
+            }
 
             facilitiesToUpdate.add(tmp);
         }

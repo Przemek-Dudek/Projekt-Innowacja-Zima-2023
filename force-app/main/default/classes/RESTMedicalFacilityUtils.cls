@@ -78,19 +78,13 @@ public with sharing virtual class RESTMedicalFacilityUtils {
         return facilityWrappers;
     }
 
-    public static void updateFacility(FacilityWrapper facility, Medical_Facility__c tmp) {
+    public static void updateFacility(FacilityWrapper facility, Medical_Facility__c tmp, List<Operating_Hours__c> operatingHoursToUpdate) {
         if(facility.name != NULL) {
             tmp.name = facility.name;
         }
 
         if (facility.operatingHours != null) {
-            List<Operating_Hours__c> operatingHoursToUpdate = new List<Operating_Hours__c>();
-
             upsertHours(operatingHoursToUpdate, facility, tmp);
-
-            if (!operatingHoursToUpdate.isEmpty()) {
-                upsert operatingHoursToUpdate; //wyniesc wyzej
-            }
         }
     }
 
