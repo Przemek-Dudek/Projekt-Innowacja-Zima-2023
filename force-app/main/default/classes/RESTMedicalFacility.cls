@@ -39,10 +39,10 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
 
     @HttpPost
     global static void postFacility() {
-        String jsonBody = RestContext.request.requestBody.toString();
+        String jsonBody = RestContext.request.requestBody.toString(); //mapa do dni, bez zbednych informacji
         List<FacilityWrapper> facilityWrappers = (List<FacilityWrapper>) JSON.deserialize(jsonBody, List<FacilityWrapper>.class);
 
-        List<FacilityWrapper> allFacilities = listFacilities();
+        List<FacilityWrapper> allFacilities = listFacilities(); //querry dni z listy, min max godziny/dynamic querry (lepsze)
 
         List<FacilityWrapper> openFacilities = new List<FacilityWrapper>();
 

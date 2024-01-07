@@ -89,7 +89,7 @@ public with sharing virtual class RESTMedicalFacilityUtils {
             upsertHours(operatingHoursToUpdate, facility, tmp);
 
             if (!operatingHoursToUpdate.isEmpty()) {
-                upsert operatingHoursToUpdate;
+                upsert operatingHoursToUpdate; //wyniesc wyzej
             }
         }
     }
