@@ -1,0 +1,16 @@
+<template>
+    <lightning-card title="Opening Hours">
+        <template if:true={hours}>
+            <template for:each={hours} for:item="hour">
+                <div key={hour.Id} class="slds-p-around_small">
+                    <p><b>{hour.Day_of_Week__c}</b></p>
+                    <p><b>Opening Time:</b> {hour.Opening_Time__c}</p>
+                    <p><b>Closing Time:</b> {hour.Closing_Time__c}</p>
+                </div>
+            </template>
+        </template>
+        <template if:false={hours}>
+            <p>No information about Opening Hours.</p>
+        </template>
+    </lightning-card>
+</template>
