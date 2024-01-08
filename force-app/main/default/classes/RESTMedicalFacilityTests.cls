@@ -31,11 +31,11 @@ private class RESTMedicalFacilityTests {
 
         Medical_Facility__c f = new Medical_Facility__c(
             Name = 'Facility 1',
-            // City__c = 'Lodz',
-            // Flat_Number__c = '11',
-            // Postcode__c = '00-000',
-            // Street_Name__c = 'Aleje Politechniki',
-            // Street_Number__c = '111',
+            City__c = 'Lodz',
+            Flat_Number__c = 11,
+            Postcode__c = '00-000',
+            Street_Name__c = 'Aleje Politechniki',
+            Street_Number__c = 111,
             Doctors_List__c = person.Id
         );
 
@@ -107,7 +107,59 @@ private class RESTMedicalFacilityTests {
         RESTMedicalFacility.getFacilities();
         test.stopTest();
 
-        String responseBody = '[{"operatingHours":{"Sunday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Saturday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Friday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Thursday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Wednesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Tuesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Monday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"}},"name":"Facility 1","id":"' + String.valueOf(testFacility.Id) + '","address":{"street_number":null,"street_name":null,"postcode":null,"flat_number":null,"city":null}}]';
+        String responseBody = '[{"operatingHours":{"Sunday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Saturday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Friday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Thursday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Wednesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Tuesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Monday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"}},"name":"Facility 1","id":"' + String.valueOf(testFacility.Id) + '","address":{"street_number":111,"street_name":"Aleje Politechniki","postcode":"00-000","flat_number":11,"city":"Lodz"}}]';
+
+        Assert.areEqual(200, response.statusCode);
+        Assert.areEqual(responseBody, response.responseBody.toString());
+    }
+
+    @isTest
+    private static void testPutMethod() {
+        Medical_Facility__c testFacility = [SELECT Id, Name, (SELECT Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c];
+
+        RestRequest request = new RestRequest();
+        request.requestURI = 'services/apexrest/Medical_Facility__c';
+        RestResponse response = new RestResponse();
+
+        RestContext.request = request;
+        RestContext.response = response;
+
+        String requestBody = '[{"operatingHours":{"Sunday2":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Sunday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Saturday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Friday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Thursday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Wednesday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Tuesday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Monday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"}},"name":"Facility 2","id":"' + + String.valueOf(testFacility.Id)  + '"}]';
+
+        request.requestBody = Blob.valueOf(requestBody);
+
+        test.startTest();
+        RESTMedicalFacility.putFacilities();
+        test.stopTest();
+
+        String responseBody = '[{"operatingHours":{"Sunday2":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Sunday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Saturday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Friday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Thursday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Wednesday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Tuesday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"},"Monday":{"openingHour":"09:00:00.000Z","closingHour":"17:00:00.000Z"}},"name":"Facility 2","id":"' + String.valueOf(testFacility.Id) + '","address":{"street_number":111,"street_name":"Aleje Politechniki","postcode":"00-000","flat_number":11,"city":"Lodz"}}]';
+
+        List<RESTMedicalFacilityUtils.FacilityWrapper> updatedFacility = RESTMedicalFacilityUtils.listFacilities();
+
+        Assert.areEqual(200, response.statusCode);
+        Assert.areEqual(responseBody, JSON.serialize(updatedFacility));
+    }
+
+    @isTest
+    private static void testPostMethod() {
+        Medical_Facility__c testFacility = [SELECT Id, Name, (SELECT Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c];
+
+        RestRequest request = new RestRequest();
+        request.requestURI = 'services/apexrest/Medical_Facility__c';
+        RestResponse response = new RestResponse();
+
+        RestContext.request = request;
+        RestContext.response = response;
+
+        String requestBody = '{"Sunday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"}}';
+
+        request.requestBody = Blob.valueOf(requestBody);
+
+        test.startTest();
+        RESTMedicalFacility.postFacility();
+        test.stopTest();
+
+        String responseBody = '[{"operatingHours":{"Sunday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Saturday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Friday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Thursday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Wednesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Tuesday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"},"Monday":{"openingHour":"08:00:00.000Z","closingHour":"16:00:00.000Z"}},"name":"Facility 1","id":"' + String.valueOf(testFacility.Id) + '","address":{"street_number":111,"street_name":"Aleje Politechniki","postcode":"00-000","flat_number":11,"city":"Lodz"}}]';
 
         Assert.areEqual(200, response.statusCode);
         Assert.areEqual(responseBody, response.responseBody.toString());

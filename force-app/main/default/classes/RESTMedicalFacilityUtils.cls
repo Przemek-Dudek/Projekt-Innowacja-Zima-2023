@@ -115,32 +115,6 @@ public with sharing virtual class RESTMedicalFacilityUtils {
         }
     }
 
-    public static Boolean isFacilityOpen(FacilityWrapper facility, List<FacilityWrapper> openingHoursToCheck) {
-        for (FacilityWrapper openingHours : openingHoursToCheck) {
-            if (facilityMatchesCriteria(facility, openingHours)) {
-                return true;
-            }
-        }
-    
-        return false;
-    }
-    
-    public static Boolean facilityMatchesCriteria(FacilityWrapper facility, FacilityWrapper openingHours) {
-        for (String dayOfWeek : openingHours.operatingHours.keySet()) {
-            HourWrapper facilityHours = facility.operatingHours.get(dayOfWeek);
-            HourWrapper openingHoursForDay = openingHours.operatingHours.get(dayOfWeek);
-    
-            if (facilityHours != null && openingHoursForDay != null) {
-                if (!(facilityHours.openingHour >= openingHoursForDay.openingHour
-                    && facilityHours.closingHour <= openingHoursForDay.closingHour)) {
-                    return false;
-                }
-            }
-        }
-    
-        return true;
-    }
-
     public static List<FacilityWrapper> listFacilitiesFromIds(Set<Id> Ids) {
         List<Medical_Facility__c> facilities = [SELECT Id, Name, City__c, Flat_Number__c, Postcode__c, Street_Name__c, Street_Number__c, 
         (SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c WHERE Id IN :Ids];
