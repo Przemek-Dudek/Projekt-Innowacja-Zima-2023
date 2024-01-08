@@ -44,20 +44,39 @@ global with sharing class RESTMedicalFacility extends RESTMedicalFacilityUtils {
 
     @HttpPost
     global static void postFacility() {
-        String jsonBody = RestContext.request.requestBody.toString(); //mapa do dni, bez zbednych informacji
-        List<FacilityWrapper> facilityWrappers = (List<FacilityWrapper>) JSON.deserialize(jsonBody, List<FacilityWrapper>.class);
+        String jsonBody = RestContext.request.requestBody.toString(); //Przyjmuje tylko godziny
+        Map<String, HourWrapper> hoursMap = (Map<String, HourWrapper>) JSON.deserialize(jsonBody, Map<String, HourWrapper>.class);
 
-        List<FacilityWrapper> allFacilities = listFacilities(); //querry dni z listy, min max godziny/dynamic querry (lepsze)
+        List<Operating_Hours__c> matchingOperatingHours = new List<Operating_Hours__c>();
+        Set<Id> matchingFacilityIds = new Set<Id>();
 
-        List<FacilityWrapper> openFacilities = new List<FacilityWrapper>();
-
-        for (FacilityWrapper facility : allFacilities) {
-            if (isFacilityOpen(facility, facilityWrappers)) {
-                openFacilities.add(facility);
+        for (String day : hoursMap.keySet()) { //nowe querry
+            HourWrapper hourWrapper = hoursMap.get(day);
+        
+            String whereClause = 'Day_of_Week__c = :day';
+        
+            if (hourWrapper.openingHour != null) {
+                whereClause += ' AND Opening_Time__c >= ' + String.valueOf(hourWrapper.openingHour);
             }
+            if (hourWrapper.closingHour != null) {
+                whereClause += ' AND Closing_Time__c <= ' + String.valueOf(hourWrapper.closingHour);
+            }
+        
+            String queryString = 'SELECT Medical_Facility__c ' +
+                             'FROM Operating_Hours__c ' +
+                             'WHERE ' + whereClause;
+
+            List<Operating_Hours__c> hoursForDay = Database.query(queryString);
+            matchingOperatingHours.addAll(hoursForDay);
         }
 
+        for (Operating_Hours__c h : matchingOperatingHours) {
+            matchingFacilityIds.add(h.Medical_Facility__c);
+        }
+
+        List<FacilityWrapper> facilities = listFacilitiesFromIds(matchingFacilityIds);
+
         RestContext.response.statusCode = 200;
-        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(openFacilities));  
+        RestContext.response.responseBody = Blob.valueOf(JSON.serialize(facilities));
     }
 }

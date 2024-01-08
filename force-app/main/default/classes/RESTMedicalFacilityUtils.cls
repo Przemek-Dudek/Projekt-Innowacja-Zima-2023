@@ -140,4 +140,39 @@ public with sharing virtual class RESTMedicalFacilityUtils {
     
         return true;
     }
+
+    public static List<FacilityWrapper> listFacilitiesFromIds(Set<Id> Ids) {
+        List<Medical_Facility__c> facilities = [SELECT Id, Name, City__c, Flat_Number__c, Postcode__c, Street_Name__c, Street_Number__c, 
+        (SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__r) FROM Medical_Facility__c WHERE Id IN :Ids];
+
+        List<FacilityWrapper> facilityWrappers = new List<FacilityWrapper>();
+
+        for (Medical_Facility__c facility : facilities) {
+            Address facilityAddress = new Address(
+                facility.Street_Name__c,
+                facility.City__c,
+                facility.Flat_Number__c,
+                facility.Street_Number__c,
+                facility.Postcode__c
+            );
+        
+            FacilityWrapper wrapper = new FacilityWrapper(
+                facility.Id,
+                facility.Name,
+                facilityAddress
+            );
+        
+            for (Operating_Hours__c operatingHours : facility.Operating_Hours__r) {
+                wrapper.addOperatingHours(
+                    operatingHours.Day_of_Week__c,
+                    operatingHours.Opening_Time__c,
+                    operatingHours.Closing_Time__c
+                );
+            }
+        
+            facilityWrappers.add(wrapper);
+        }
+
+        return facilityWrappers;
+    }
 }
