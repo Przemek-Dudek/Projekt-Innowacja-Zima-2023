@@ -94,7 +94,7 @@ private class FacilityWorkingHoursUpdateTest {
     @isTest
     static void testScheduleMe() {
         Test.startTest();
-        Id jobId = FacilityWorkingHoursUpdate.scheduleMe();
+        Id jobId = FacilityWorkingHoursUpdate.scheduleMe('Test Job');
         Test.stopTest();
 
         System.assertNotEquals(null, jobId);
@@ -117,5 +117,37 @@ private class FacilityWorkingHoursUpdateTest {
             System.assertNotEquals(Time.newInstance(8, 0, 0, 0), h.Opening_Time__c);
             System.assertNotEquals(Time.newInstance(16, 0, 0, 0), h.Closing_Time__c);
         }
+    }
+
+    @isTest
+    static void testBatchable(){
+        List<Operating_Hours__c> Hours = [SELECT Id, Opening_Time__c, Closing_Time__c FROM Operating_Hours__c];
+
+        Test.startTest();
+        FacilityWorkingHoursUpdate batch = new FacilityWorkingHoursUpdate();
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        List<Operating_Hours__c> newHours = [SELECT Id, Opening_Time__c, Closing_Time__c FROM Operating_Hours__c];
+
+        System.assertNotEquals(Hours, newHours);
+    }
+
+    @isTest
+    static void testBatchableFailure(){
+
+        Test.startTest();
+        FacilityWorkingHoursUpdate batch = new FacilityWorkingHoursUpdate();
+    
+        batch.isUpdateSuccessful = False;
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        List<EmailMessage> sentEmails = [
+                        SELECT Id, ToAddress, Subject, TextBody
+                        FROM EmailMessage
+                    ];
+
+        System.assertEquals(1, sentEmails.size());
     }
 }
