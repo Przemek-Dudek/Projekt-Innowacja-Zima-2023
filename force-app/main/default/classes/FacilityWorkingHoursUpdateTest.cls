@@ -134,7 +134,20 @@ private class FacilityWorkingHoursUpdateTest {
     }
 
     @isTest
-    static void testBatchableFailure(){
-        //simulate failure
-    }
+static void testBatchableFailure(){
+
+    Test.startTest();
+    FacilityWorkingHoursUpdate batch = new FacilityWorkingHoursUpdate();
+    
+    batch.isUpdateSuccessful = False;
+    Database.executeBatch(batch);
+    Test.stopTest();
+
+    List<EmailMessage> sentEmails = [
+      SELECT Id, ToAddress, Subject, TextBody
+      FROM EmailMessage
+    ];
+    
+    System.assertEquals(1, sentEmails.size());
+}
 }

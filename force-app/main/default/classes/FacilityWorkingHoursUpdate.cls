@@ -2,7 +2,7 @@ public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Dat
     public static final String CRON_EXPERSSION = '0 0 1 * * ?';
 
     private Set<Id> errorToIDs = new Set<Id>();
-    private Boolean isUpdateSuccessful = true;
+    public Boolean isUpdateSuccessful = true;
 
     public static Id scheduleMe(String jobname) {
         FacilityWorkingHoursUpdate schedule = new FacilityWorkingHoursUpdate();
@@ -19,7 +19,6 @@ public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Dat
 
     public Database.QueryLocator start(Database.BatchableContext context) {
         errorToIDs = new Set<Id>();
-        isUpdateSuccessful = true;
 
         return Database.getQueryLocator([SELECT Id, Day_of_Week__c, Opening_Time__c, Closing_Time__c FROM Operating_Hours__c]);
     }
