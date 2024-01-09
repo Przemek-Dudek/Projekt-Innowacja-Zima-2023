@@ -3,8 +3,11 @@ trigger TriggerHandler_MedicalAppointment on Medical_Appointment__c (after inser
     if(Trigger.isBefore){
         if(Trigger.isInsert){
             MedicalAppointmentHandler.handleFirstInternistAppointmentONSITE(Trigger.new);
+            MedicalAppointmentHandler.handleInsuranceRequired(Trigger.new);
         }
-        
+        else if(Trigger.isUpdate){
+            MedicalAppointmentHandler.handleInsuranceRequired(Trigger.new);
+        }
     }
     else if(Trigger.isAfter){
         if(Trigger.isUpdate){
