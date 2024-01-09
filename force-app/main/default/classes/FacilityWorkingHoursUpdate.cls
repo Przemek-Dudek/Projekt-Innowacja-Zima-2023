@@ -1,14 +1,13 @@
 public with sharing class FacilityWorkingHoursUpdate implements Schedulable, Database.Batchable<SObject>, Database.Stateful {
-    public static final String JOB_NAME = 'Update workweeks';
     public static final String CRON_EXPERSSION = '0 0 1 * * ?';
 
     private Set<Id> errorToIDs = new Set<Id>();
     private Boolean isUpdateSuccessful = true;
 
-    public static Id scheduleMe() {
+    public static Id scheduleMe(String jobname) {
         FacilityWorkingHoursUpdate schedule = new FacilityWorkingHoursUpdate();
         return System.schedule(
-          JOB_NAME,
+          jobname,
           CRON_EXPERSSION,
           schedule
         );
