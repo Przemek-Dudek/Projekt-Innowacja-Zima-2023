@@ -8,16 +8,20 @@
         <label>Fields</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Specialization__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Required</behavior>
                 <field>First_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>LastName__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Medical_Facility__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Specialization__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -76,7 +80,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h3N000004fV3P</masterLabel>
+        <masterLabel>00h3N000004Q1Vd</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>

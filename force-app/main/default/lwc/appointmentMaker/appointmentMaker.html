@@ -4,9 +4,7 @@
             <template if:true={doctors}>
                 <template for:each={doctors} for:item="doctor">
                     <div key={doctor.Id} class="slds-m-bottom_medium">
-                        <p>{doctor.First_Name__c}</p>
-                        <p>{doctor.LirstName__c}</p>
-                        <p>{doctor.Specialization__c}</p>
+                        <p>{doctor.First_Name__c}   {doctor.LastName__c}  -  <b>{doctor.Specialization__c}</b></p>
                     </div>
                 </template>
             </template>
