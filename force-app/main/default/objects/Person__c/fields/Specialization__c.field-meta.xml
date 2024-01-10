@@ -30,6 +30,126 @@
                 <default>false</default>
                 <label>Laryngologist</label>
             </value>
+            <value>
+                <fullName>Allergy &amp; Immunology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Allergy &amp; Immunology</label>
+            </value>
+            <value>
+                <fullName>Anesthesiology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Anesthesiology</label>
+            </value>
+            <value>
+                <fullName>Cardiology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Cardiology</label>
+            </value>
+            <value>
+                <fullName>Dermatology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Dermatology</label>
+            </value>
+            <value>
+                <fullName>Emergency Medicine</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Emergency Medicine</label>
+            </value>
+            <value>
+                <fullName>Endocrinology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Endocrinology</label>
+            </value>
+            <value>
+                <fullName>Gastroenterology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Gastroenterology</label>
+            </value>
+            <value>
+                <fullName>Hematology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Hematology</label>
+            </value>
+            <value>
+                <fullName>Infectious Disease</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Infectious Disease</label>
+            </value>
+            <value>
+                <fullName>Neurology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Neurology</label>
+            </value>
+            <value>
+                <fullName>Obstetrics &amp; Gynecology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Obstetrics &amp; Gynecology</label>
+            </value>
+            <value>
+                <fullName>Oncology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Oncology</label>
+            </value>
+            <value>
+                <fullName>Ophthalmology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Ophthalmology</label>
+            </value>
+            <value>
+                <fullName>Orthopedics</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Orthopedics</label>
+            </value>
+            <value>
+                <fullName>Pediatrics</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pediatrics</label>
+            </value>
+            <value>
+                <fullName>Physical Medicine &amp; Rehabilitation</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Physical Medicine &amp; Rehabilitation</label>
+            </value>
+            <value>
+                <fullName>Psychiatry</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Psychiatry</label>
+            </value>
+            <value>
+                <fullName>Pulmonology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Pulmonology</label>
+            </value>
+            <value>
+                <fullName>Rheumatology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Rheumatology</label>
+            </value>
+            <value>
+                <fullName>Urology</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Urology</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
