@@ -2,6 +2,7 @@ import { LightningElement, wire, api, track } from 'lwc';
 
 import getDoctorsBySpecialization from '@salesforce/apex/AppointmentController.getDoctorsBySpecialization';
 import getSpecializations from '@salesforce/apex/AppointmentController.getSpecializations';
+import getHours from '@salesforce/apex/AppointmentController.getHours';
 
 export default class AppointmentMaker extends LightningElement {
     //@api recordId;

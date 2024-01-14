@@ -19,4 +19,12 @@ public with sharing class AppointmentController {
 
         return specializationsList;
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Operating_Hours__c> getHours(String selectedDay, Id selectedFacility) {
+        return [SELECT Opening_Time__c, Closing_Time__c 
+                FROM Operating_Hours__c 
+                WHERE Day_of_Week__c = :selectedDay AND Medical_Facility__c = :selectedFacility
+        ];
+    }
 }
