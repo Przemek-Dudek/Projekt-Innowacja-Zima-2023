@@ -9,6 +9,9 @@ export default class AppointmentMaker extends LightningElement {
     @track selectedSpecialization = '';
     @track doctors = [];
     @track specializationOptions = [];
+    @track selectedDoctor;
+    @track selectedDay;
+    @track isHourAvailable;
 
     @wire(getSpecializations, {})
     getSpecializations({ data, error }) {
@@ -37,7 +40,8 @@ export default class AppointmentMaker extends LightningElement {
         if (data) {
             this.doctors = data.map(doctor => ({
                 ...doctor,
-                buttonLabel: `${doctor.First_Name__c} ${doctor.LastName__c}`
+                buttonLabel: `${doctor.First_Name__c} ${doctor.LastName__c}`,
+                clicked: 0
             }));
             this.error = undefined;
         } else if (error) {
@@ -49,14 +53,16 @@ export default class AppointmentMaker extends LightningElement {
 
     handleSpecializationChange(event) {
         this.selectedSpecialization = event.detail.value;
-        console.log('Selected Specialization:', this.selectedSpecialization);
+        this.selectedDoctor = null;
     }
 
     handleMouseOver(event) {
         const doctorId = event.target.dataset.key;
         const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId);
         if (doctorIndex !== -1) {
-            this.doctors[doctorIndex].buttonLabel = 'Make Appointment';
+            if(this.doctors[doctorIndex].clicked === 0) {
+                this.doctors[doctorIndex].variant = 'brand';
+            }
         }
     }
 
@@ -64,16 +70,43 @@ export default class AppointmentMaker extends LightningElement {
         const doctorId = event.target.dataset.key;
         const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId);
         if (doctorIndex !== -1) {
-            this.doctors[doctorIndex].buttonLabel = `${this.doctors[doctorIndex].First_Name__c} ${this.doctors[doctorIndex].LastName__c}`;
+            if(this.doctors[doctorIndex].clicked === 0) {
+                this.doctors[doctorIndex].variant = 'neutral';
+            }
         }
     }
 
-    handleButtonClick() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__component',
-            attributes: {
-                componentName: 'c__yourOtherLWC'
+    handleButtonClick(event) {
+        const doctorId = event.target.dataset.key;
+        const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId);
+        if (doctorIndex !== -1) {
+            if(this.doctors[doctorIndex].clicked === 0) {
+                this.doctors.forEach((doc, index) => {
+                    this.doctors[index].clicked = 0;
+                    this.doctors[index].variant = 'neutral';
+                });
+
+                this.doctors[doctorIndex].variant = 'success';
+                this.doctors[doctorIndex].clicked = 1;
+                this.selectedDoctor = this.doctors[doctorIndex].Id;
+                this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+            } else {
+                this.doctors[doctorIndex].variant = 'neutral';
+                this.doctors[doctorIndex].clicked = 0;
+                this.selectedDoctor = null;
+                this.isHourAvailable = this.selectedDay && this.selectedDoctor;
             }
-        });
+            //do zrobienia handel
+        }
+    }
+
+    handleDayChange(event) {
+        const selectedDate = new Date(event.target.value);
+        
+        const dayOfWeekNumber = selectedDate.getDay();
+    
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        this.selectedDay = daysOfWeek[dayOfWeekNumber];
+        this.isHourAvailable = this.selectedDay && this.selectedDoctor;
     }
 }
