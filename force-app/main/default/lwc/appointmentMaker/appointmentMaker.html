@@ -1,16 +1,40 @@
 <template>
-    <lightning-card title="Doctors in Facility" icon-name="standard:account">
-        <div class="slds-m-around_medium">
-            <template if:true={doctors}>
+    <lightning-card title="Doctors" class="slds-m-horizontal_large">
+        <lightning-combobox 
+            class="slds-m-horizontal_large"
+            label="Specialization"
+            value={selectedSpecialization}
+            options={specOptions}
+            onchange={handleSpecializationChange}>
+        </lightning-combobox>
+
+        <template if:true={doctors}>
+            <ul class="slds-m-around_large">
                 <template for:each={doctors} for:item="doctor">
-                    <div key={doctor.Id} class="slds-m-bottom_medium">
-                        <p>{doctor.First_Name__c}   {doctor.LastName__c}  -  <b>{doctor.Specialization__c}</b></p>
-                    </div>
+                    <span key={doctor.id}>
+                        <li class="slds-m-vertical_x-small slds-m-horizontal_xx-large" >
+                            <lightning-button
+                                label={doctor.buttonLabel}
+                                title="Make appointment"
+                                data-key={doctor.Id}
+                                onmouseover={handleMouseOver}
+                                onmouseout={handleMouseOut}
+                                onclick={handleButtonClick}>
+                            </lightning-button>
+                            <template if:true={doctor.Medical_Facility__r}>
+                                <div class="slds-m-vertical_x-small slds-float_right">
+                                    {doctor.Medical_Facility__r.Name}
+                                </div>
+                            </template>
+                            <template if:false={doctor.Medical_Facility__r}>
+                                <div class="slds-m-vertical_x-small slds-float_right">
+                                    Online Consultation
+                                </div>
+                            </template>
+                        </li>
+                    </span>
                 </template>
-            </template>
-            <template if:false={doctors}>
-                <p>No doctors found for this facility.</p>
-            </template>
-        </div>
+            </ul>
+        </template>
     </lightning-card>
 </template>

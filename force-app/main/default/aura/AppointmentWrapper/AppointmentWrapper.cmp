@@ -1,0 +1,3 @@
+<aura:component implements="flexipage:availableForAllPageTypes, lightning:actionOverride">
+    <c:appointmentMaker aura:id="appointmentMaker"/>
+</aura:component>
