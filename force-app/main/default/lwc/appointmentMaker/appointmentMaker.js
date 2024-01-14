@@ -81,15 +81,26 @@ export default class AppointmentMaker extends LightningElement {
         const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId);
         if (doctorIndex !== -1) {
             if(this.doctors[doctorIndex].clicked === 0) {
-                this.doctors.forEach((doc, index) => {
-                    this.doctors[index].clicked = 0;
-                    this.doctors[index].variant = 'neutral';
-                });
+                if(this.doctors[doctorIndex].Medical_Facility__r !== undefined) {
+                    this.doctors.forEach((doc, index) => {
+                        this.doctors[index].clicked = 0;
+                        this.doctors[index].variant = 'neutral';
+                    });
+    
+                    this.doctors[doctorIndex].variant = 'success';
+                    this.doctors[doctorIndex].clicked = 1;
+                    this.selectedDoctor = this.doctors[doctorIndex].Id;
+                    this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                } else {
+                    this.doctors.forEach((doc, index) => {
+                        this.doctors[index].variant = 'neutral';
+                    });
 
-                this.doctors[doctorIndex].variant = 'success';
-                this.doctors[doctorIndex].clicked = 1;
-                this.selectedDoctor = this.doctors[doctorIndex].Id;
-                this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                    this.doctors[index].variant = 'destructive';
+                    this.selectedDoctor = null;
+                    this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                }
+                
             } else {
                 this.doctors[doctorIndex].variant = 'neutral';
                 this.doctors[doctorIndex].clicked = 0;
