@@ -25,7 +25,7 @@
             <template if:true={doctors}>
                 <ul class="slds-m-around_large">
                     <template for:each={doctors} for:item="doctor">
-                        <li key={doctor.id} class="slds-grid slds-gutters slds-m-vertical_x-small" >
+                        <span key={doctor.id} class="slds-grid slds-gutters slds-m-vertical_x-small" >
                             <div class="slds-col slds-size_1-of-2 slds-align_absolute-center">
                                 <lightning-button
                                     label={doctor.buttonLabel}
@@ -45,14 +45,21 @@
                                     <span class="slds-badge slds-badge_lightest slds-m-top_xx-small">Unavailable</span>
                                 </template>
                             </div>
-                        </li>
+                        </span>
                     </template>
                 </ul>
             </template>
 
             <template if:true={isHourAvailable}>
                 <div class="row slds-m-horizontal_large">
-                    WYBIERANKO GODZINY
+                    <div class="slds-text-body_medium">Book a visit.</div>
+                    <lightning-combobox 
+                        class="slds-m-horizontal_large"
+                        label="Select convenient time"
+                        value={selectedHour}
+                        options={availableHours}
+                        onchange={handleHourChange}>
+                    </lightning-combobox>
                 </div>
             </template>
 

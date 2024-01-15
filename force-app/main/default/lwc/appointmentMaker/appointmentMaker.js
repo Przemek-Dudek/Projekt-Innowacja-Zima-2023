@@ -2,7 +2,7 @@ import { LightningElement, wire, api, track } from 'lwc';
 
 import getDoctorsBySpecialization from '@salesforce/apex/AppointmentController.getDoctorsBySpecialization';
 import getSpecializations from '@salesforce/apex/AppointmentController.getSpecializations';
-import getHours from '@salesforce/apex/AppointmentController.getHours';
+import getAvailableHours from '@salesforce/apex/AppointmentController.getAvailableHours';
 
 export default class AppointmentMaker extends LightningElement {
     //@api recordId;
@@ -10,9 +10,12 @@ export default class AppointmentMaker extends LightningElement {
     @track selectedSpecialization = '';
     @track doctors = [];
     @track specializationOptions = [];
-    @track selectedDoctor;
-    @track selectedDay;
+    @track selectedDoctor = null;
+    @track selectedDate = null;
     @track isHourAvailable;
+    @track selectedHour;
+    @track hours;
+    @track availableHours;
 
     @wire(getSpecializations, {})
     getSpecializations({ data, error }) {
@@ -49,6 +52,25 @@ export default class AppointmentMaker extends LightningElement {
             this.error = error;
             this.doctors = [];
             console.error('Error fetching doctors:', error);
+        }
+    }
+
+    @wire(getAvailableHours, { selectedDate: '$selectedDate', selectedDoctor: '$selectedDoctor' })
+    wiredHours({ error, data }) {
+        if (data) {
+            this.availableHours = data.map(item => {
+                return {
+                    label: item.openingTime.toString().substr(11, 5) + ' - ' + item.closingTime.toString().substr(11, 5),
+                    value: {
+                        openingTime: item.openingTime,
+                        closingTime: item.closingTime
+                    }
+                };
+            });
+            console.log('Hours: ', data);
+        } else if (error) {
+            this.availableHours = [];
+            console.error('Error:', error);
         }
     }
 
@@ -91,7 +113,8 @@ export default class AppointmentMaker extends LightningElement {
                     this.doctors[doctorIndex].variant = 'success';
                     this.doctors[doctorIndex].clicked = 1;
                     this.selectedDoctor = this.doctors[doctorIndex].Id;
-                    this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                    this.selectedFacility = this.doctors[doctorIndex].Medical_Facility__r.Id;
+                    this.isHourAvailable = this.selectedDate && this.selectedDoctor;
                 } else {
                     this.doctors.forEach((doc, index) => {
                         this.doctors[index].variant = 'neutral';
@@ -99,26 +122,24 @@ export default class AppointmentMaker extends LightningElement {
 
                     this.doctors[index].variant = 'destructive';
                     this.selectedDoctor = null;
-                    this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                    this.isHourAvailable = this.selectedDate && this.selectedDoctor;
                 }
                 
             } else {
                 this.doctors[doctorIndex].variant = 'neutral';
                 this.doctors[doctorIndex].clicked = 0;
                 this.selectedDoctor = null;
-                this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+                this.isHourAvailable = this.selectedDate && this.selectedDoctor;
             }
             //do zrobienia handel
         }
     }
 
     handleDayChange(event) {
-        const selectedDate = new Date(event.target.value);
-        
-        const dayOfWeekNumber = selectedDate.getDay();
-    
-        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        this.selectedDay = daysOfWeek[dayOfWeekNumber];
-        this.isHourAvailable = this.selectedDay && this.selectedDoctor;
+        this.selectedDate = new Date(event.target.value);
+
+        console.log(this.selectedDate);
+
+        this.isHourAvailable = this.selectedDate && this.selectedDoctor;
     }
 }
