@@ -14,7 +14,6 @@ export default class AppointmentMaker extends LightningElement {
     @track selectedDate = null;
     @track isHourAvailable;
     @track selectedHour;
-    @track hours;
     @track availableHours;
 
     @wire(getSpecializations, {})
@@ -39,6 +38,10 @@ export default class AppointmentMaker extends LightningElement {
         return this.specializationOptions;
     }
 
+    get hourOptions() {
+        return this.availableHours;
+    }
+
     @wire(getDoctorsBySpecialization, { specialization: '$selectedSpecialization' })
     wiredDoctors({ error, data }) {
         if (data) {
@@ -61,10 +64,7 @@ export default class AppointmentMaker extends LightningElement {
             this.availableHours = data.map(item => {
                 return {
                     label: item.openingTime.toString().substr(11, 5) + ' - ' + item.closingTime.toString().substr(11, 5),
-                    value: {
-                        openingTime: item.openingTime,
-                        closingTime: item.closingTime
-                    }
+                    value: item.openingTime
                 };
             });
             console.log('Hours: ', data);
@@ -77,6 +77,7 @@ export default class AppointmentMaker extends LightningElement {
     handleSpecializationChange(event) {
         this.selectedSpecialization = event.detail.value;
         this.selectedDoctor = null;
+        this.isHourAvailable = this.selectedDate && this.selectedDoctor;
     }
 
     handleMouseOver(event) {
@@ -141,5 +142,11 @@ export default class AppointmentMaker extends LightningElement {
         console.log(this.selectedDate);
 
         this.isHourAvailable = this.selectedDate && this.selectedDoctor;
+    }
+
+    handleHourChange(event) {
+        this.selectedHour = event.detail.value;
+
+        console.log(this.selectedHour);
     }
 }
