@@ -5,8 +5,6 @@ import getSpecializations from '@salesforce/apex/AppointmentController.getSpecia
 import getAvailableHours from '@salesforce/apex/AppointmentController.getAvailableHours';
 
 export default class AppointmentMaker extends LightningElement {
-    //@api recordId;
-
     @track selectedSpecialization = '';
     @track doctors = [];
     @track specializationOptions = [];
@@ -76,8 +74,7 @@ export default class AppointmentMaker extends LightningElement {
 
     handleSpecializationChange(event) {
         this.selectedSpecialization = event.detail.value;
-        this.selectedDoctor = null;
-        this.isHourAvailable = this.selectedDate && this.selectedDoctor;
+        this.destroySelected();
     }
 
     handleMouseOver(event) {
@@ -122,18 +119,21 @@ export default class AppointmentMaker extends LightningElement {
                     });
 
                     this.doctors[index].variant = 'destructive';
-                    this.selectedDoctor = null;
-                    this.isHourAvailable = this.selectedDate && this.selectedDoctor;
+                    this.destroySelected();
                 }
                 
             } else {
                 this.doctors[doctorIndex].variant = 'neutral';
                 this.doctors[doctorIndex].clicked = 0;
-                this.selectedDoctor = null;
-                this.isHourAvailable = this.selectedDate && this.selectedDoctor;
+                this.destroySelected();
             }
-            //do zrobienia handel
         }
+    }
+
+    destroySelected() {
+        this.selectedDoctor = null;
+        this.selectedHour = null;
+        this.isHourAvailable = this.selectedDate && this.selectedDoctor;
     }
 
     handleDayChange(event) {
