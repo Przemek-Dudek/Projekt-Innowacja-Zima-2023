@@ -5,7 +5,7 @@ import City from "@salesforce/schema/Medical_Facility__c.City__c";
 import Street_Name from "@salesforce/schema/Medical_Facility__c.Street_Name__c";
 import Street_Number from "@salesforce/schema/Medical_Facility__c.Street_Number__c";
 import Post_Code from "@salesforce/schema/Medical_Facility__c.Postcode__c";
-import name from "@salesforce/schema/Medical_Facility__c.Name";
+import fac_name from "@salesforce/schema/Medical_Facility__c.Name";
 import fac_type from "@salesforce/schema/Medical_Facility__c.Type__c";
 
 export default class LocationOfMedicalFacility extends LightningElement {
@@ -13,7 +13,7 @@ export default class LocationOfMedicalFacility extends LightningElement {
     
 
     @wire(getRecord, { recordId: '$recordId', 
-    optionalFields: [City, Street_Name, Street_Number, Post_Code],
+    optionalFields: [City, Street_Name, Street_Number, Post_Code, fac_name, fac_type],
     })
     facility; 
 
@@ -30,7 +30,7 @@ export default class LocationOfMedicalFacility extends LightningElement {
     }
 
     get facilityName(){
-        return getFieldValue(this.facility.data, name);
+        return getFieldValue(this.facility.data, fac_name);
     }
 
     get desc(){
@@ -43,6 +43,7 @@ export default class LocationOfMedicalFacility extends LightningElement {
         const my_post_code = this.postCode;
         const fac_name = this.facilityName;
         const desc = this.desc;
+    
         if(this.facility.data){
             return [
                 {
@@ -51,7 +52,8 @@ export default class LocationOfMedicalFacility extends LightningElement {
                         Street: my_street,
                         PostalCode: my_post_code,
                     },
-                   
+                    title: fac_name,
+                    description: desc
                 },
             ];
         }
