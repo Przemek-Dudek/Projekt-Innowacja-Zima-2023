@@ -200,7 +200,7 @@ export default class AppointmentMaker extends LightningElement {
 
         const appointmentData = {
             doctorId: this.selectedDoctor.toString(),
-            hour: this.selectedHour,
+            hour: this.selectedHour.toString(),
             patientId: this.selectedPatient.toString()
         };
 

@@ -69,17 +69,24 @@ public with sharing class AppointmentController {
         ];
     }
 
+    public class AppointmentWrapper {
+        public String doctorId;
+        public Datetime hour;
+        public String patientId;
+    }
+
     @AuraEnabled(cacheable=false)
     public static void makeAppointment(String appointmentDataString) {
         try {
-            System.debug(appointmentDataString);
-            Map<String, Object> appointmentMap = (Map<String, Object>) JSON.deserializeUntyped(appointmentDataString); //wrapper
+            AppointmentWrapper appointmentData = (AppointmentWrapper) JSON.deserialize(appointmentDataString, AppointmentWrapper.class);
+            
+            System.debug(appointmentData);
 
             Medical_Appointment__c newAppointment = new Medical_Appointment__c();
 
-            newAppointment.Doctor__c = (Id) appointmentMap.get('doctorId');
-            newAppointment.Appointment_Date__c = Datetime.parse((String)appointmentMap.get('hour'));
-            newAppointment.Patient__c = (Id) appointmentMap.get('patientId');
+            newAppointment.Doctor__c = (Id) appointmentData.doctorId;
+            newAppointment.Appointment_Date__c = appointmentData.hour;
+            newAppointment.Patient__c = (Id) appointmentData.patientId;
 
             System.debug(newAppointment);
 
