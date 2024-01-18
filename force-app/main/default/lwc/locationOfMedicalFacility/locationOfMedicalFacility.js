@@ -53,7 +53,7 @@ export default class LocationOfMedicalFacility extends LightningElement {
                         PostalCode: my_post_code,
                     },
                     title: fac_name,
-                    description: desc
+                    description: `${desc} - ${my_city}, ${my_post_code}`
                 },
             ];
         }
