@@ -35,8 +35,7 @@ private class FacilityWorkingHoursUpdateTest {
             Flat_Number__c = 11,
             Postcode__c = '00-000',
             Street_Name__c = 'Aleje Politechniki',
-            Street_Number__c = 111,
-            Doctors_List__c = person.Id
+            Street_Number__c = 111
         );
 
         insert f;

@@ -35,6 +35,10 @@
                 <behavior>Edit</behavior>
                 <field>Email__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Medical_Insurance__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
