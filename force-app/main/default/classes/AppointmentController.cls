@@ -61,6 +61,38 @@ public with sharing class AppointmentController {
         return hoursMapped;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<Person__c> getPatients() {
+        return [SELECT Id, First_Name__c, LastName__c
+                FROM Person__c
+                WHERE RecordType.Name = 'Patient'
+        ];
+    }
+
+    @AuraEnabled(cacheable=false)
+    public static void makeAppointment(String appointmentDataString) {
+        try {
+            System.debug(appointmentDataString);
+            Map<String, Object> appointmentMap = (Map<String, Object>) JSON.deserializeUntyped(appointmentDataString); //wrapper
+
+            Medical_Appointment__c newAppointment = new Medical_Appointment__c();
+
+            newAppointment.Doctor__c = (Id) appointmentMap.get('doctorId');
+            newAppointment.Appointment_Date__c = Datetime.parse((String)appointmentMap.get('hour'));
+            newAppointment.Patient__c = (Id) appointmentMap.get('patientId');
+
+            System.debug(newAppointment);
+
+            insert newAppointment;
+
+            System.debug(newAppointment);
+        } catch (Exception e) {
+            System.debug(e.getMessage());
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+
     private static List<HourWrapper> generateOperatingHours(Datetime openingTime, Datetime closingTime) {
         List<HourWrapper> hours = new List<HourWrapper>();
 

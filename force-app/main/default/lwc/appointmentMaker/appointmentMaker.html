@@ -16,8 +16,8 @@
                     <lightning-combobox 
                         class="slds-m-horizontal_large"
                         label="Specialization"
-                        value={selectedSpecialization}
-                        options={specOptions}
+                        value={getSelectedSpec}
+                        options={getSpecOptions}
                         onchange={handleSpecializationChange}>
                     </lightning-combobox>
                 </div>
@@ -65,17 +65,31 @@
                     <lightning-combobox 
                         class="slds-m-horizontal_large"
                         label="Select convenient time"
-                        value={selectedHour}
-                        options={hourOptions}
+                        value={getSelectedHour}
+                        options={getHourOptions}
                         onchange={handleHourChange}>
+                    </lightning-combobox>
+                </div>
+
+                <div class="row slds-m-horizontal_large">
+                    <lightning-combobox 
+                        class="slds-m-horizontal_large"
+                        label="Select patient"
+                        value={getSelectedPatient}
+                        options={getPatientOptions}
+                        onchange={handlePatientChange}>
                     </lightning-combobox>
                 </div>
             </template>
           </div>
           <div class="slds-modal__footer">
-            <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
-            <button class="slds-button slds-button_brand">Save</button>
-          </div>
+            <button class="slds-button slds-button_neutral" onclick={handleCancel} aria-label="Cancel and close">
+                Cancel
+            </button>
+            <button class="slds-button slds-button_brand" onclick={handleSave}>
+                Save
+            </button>
+        </div>
         </div>
       </section>
       <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>

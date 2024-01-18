@@ -3,6 +3,8 @@ import { LightningElement, wire, api, track } from 'lwc';
 import getDoctorsBySpecialization from '@salesforce/apex/AppointmentController.getDoctorsBySpecialization';
 import getSpecializations from '@salesforce/apex/AppointmentController.getSpecializations';
 import getAvailableHours from '@salesforce/apex/AppointmentController.getAvailableHours';
+import getPatients from '@salesforce/apex/AppointmentController.getPatients';
+import makeAppointment from '@salesforce/apex/AppointmentController.makeAppointment';
 
 export default class AppointmentMaker extends LightningElement {
     @track selectedSpecialization = '';
@@ -13,6 +15,8 @@ export default class AppointmentMaker extends LightningElement {
     @track isHourAvailable;
     @track selectedHour;
     @track availableHours;
+    @track patientOptions;
+    @track selectedPatient;
 
     @wire(getSpecializations, {})
     getSpecializations({ data, error }) {
@@ -32,12 +36,28 @@ export default class AppointmentMaker extends LightningElement {
         }
     }
 
-    get specOptions() {
+    get getSpecOptions() {
         return this.specializationOptions;
     }
 
-    get hourOptions() {
+    get getHourOptions() {
         return this.availableHours;
+    }
+
+    get getPatientOptions() {
+        return this.patientOptions;
+    }
+
+    get getSelectedSpec() {
+        return this.selectedSpecialization;
+    }
+
+    get getSelectedHour() {
+        return this.selectedHour;
+    }
+
+    get getSelectedPatient() {
+        return this.selectedPatient;
     }
 
     @wire(getDoctorsBySpecialization, { specialization: '$selectedSpecialization' })
@@ -72,9 +92,28 @@ export default class AppointmentMaker extends LightningElement {
         }
     }
 
+    @wire(getPatients, { specialization: '$selectedSpecialization' })
+    wiredPatients({ error, data }) {
+        if (data) {
+            this.patientOptions = data.map(patient => ({
+                value: patient.Id,
+                label: `${patient.First_Name__c} ${patient.LastName__c}`
+            }));
+            console.log("Pacjenci: ", this.patientOptions);
+        } else if (error) {
+            this.error = error;
+            this.patientOptions = [];
+            console.error('Error fetching patients:', error);
+        }
+    }
+
     handleSpecializationChange(event) {
         this.selectedSpecialization = event.detail.value;
-        this.destroySelected();
+    }
+
+    handlePatientChange(event) {
+        this.selectedPatient = event.detail.value;
+        console.log(this.selectedPatient);
     }
 
     handleMouseOver(event) {
@@ -146,7 +185,40 @@ export default class AppointmentMaker extends LightningElement {
 
     handleHourChange(event) {
         this.selectedHour = event.detail.value;
+    }
 
-        console.log(this.selectedHour);
+    handleCancel() {
+        this.showComponent = false;
+        history.back();
+    }
+
+    handleSave() {
+        if (!this.selectedDoctor || !this.selectedDate || !this.selectedHour || !this.selectedPatient) {
+            console.error('Please fill in all required fields before saving.');
+            return;
+        }
+
+        const appointmentData = {
+            doctorId: this.selectedDoctor.toString(),
+            hour: this.selectedHour,
+            patientId: this.selectedPatient.toString()
+        };
+
+        const appointmentDataString = JSON.stringify(appointmentData);
+
+        console.log('AD: ', appointmentData);
+        console.log('ADS: ', appointmentDataString);
+
+        makeAppointment({ appointmentDataString: appointmentDataString })
+            .then(result => {
+                console.log('Appointment created successfully:', result);
+
+                this.dispatchEvent(new CustomEvent('closemodal'));
+            })
+            .catch(error => {
+                console.error('Error creating appointment:', error);
+            });
+
+        this.handleCancel();
     }
 }
