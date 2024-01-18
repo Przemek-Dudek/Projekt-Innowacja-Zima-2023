@@ -1,6 +1,6 @@
 public class RESTMedicalFacilityExternal {
     //zwracanie voida
-    public static Medical_Facility__c makeGetMedicalFacilities() {
+    public static List<Map<Medical_Facility__c, List<Operating_Hours__c>>> makeGetMedicalFacilities() {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setHeader('Authorization', 'Bearer '+getToken());
@@ -8,30 +8,39 @@ public class RESTMedicalFacilityExternal {
         request.setMethod('GET');
         Account acc=new Account();
         HttpResponse response = http.send(request);
+        List<Map<Medical_Facility__c, List<Operating_Hours__c>>> medicalFacilitesWithOpeningHours = new List<Map<Medical_Facility__c, List<Operating_Hours__c>>>();
         if(response.getStatusCode() == 200) {
-            List<MedicalFacilityWrapper> receivedFacilities = (List<MedicalFacilityWrapper>)JSON.deserialize(response.getBody(), List<MedicalFacilityWrapper>.class);
-            for(MedicalFacilityWrapper receivedfacility : receivedFacilities) {
-                System.debug(receivedfacility);
-                Medical_Facility__c medicalFacility = new Medical_Facility__c();
-                medicalFacility.City__c = receivedfacility.address[0];
-                medicalFacility.Street_Name__c = receivedfacility.address[1];
-                medicalFacility.Street_Number__c = Integer.valueOf(receivedfacility.address[2]);
-                medicalFacility.Postcode__c = receivedfacility.address[3];
-                medicalFacility.Name = receivedfacility.name;
-                HourWrapper openingHours = new HourWrapper();
-                Map<String, HourWrapper> dayHours = openingHours.getHours(receivedfacility.openingHours);
-                //medicalFacility.Opening_Hours__c = openingHours.openingHour;
-                //medicalFacility.Phone__c = receivedfacility.phone;
-                List<Operating_Hours__c> operatingHours = new List<Operating_Hours__c>();
-                for(String day : dayHours.keySet()) {
-                    Operating_Hours__c operatingHour = new Operating_Hours__c();
-                    operatingHour.Day_of_Week__c = day;
-                    operatingHour.Opening_Time__c = dayHours.get(day).openingHour;
-                    operatingHour.Closing_Time__c = dayHours.get(day).closingHour;
-                    operatingHours.add(operatingHour);
-                }
-            } 
+            try {
+                List<MedicalFacilityWrapper> receivedFacilities = (List<MedicalFacilityWrapper>)JSON.deserialize(response.getBody(), List<MedicalFacilityWrapper>.class);
+                for(MedicalFacilityWrapper receivedfacility : receivedFacilities) {
+                    System.debug(receivedfacility);
+                    Medical_Facility__c medicalFacility = new Medical_Facility__c();
+                    medicalFacility.City__c = receivedfacility.address[0];
+                    medicalFacility.Street_Name__c = receivedfacility.address[1];
+                    medicalFacility.Street_Number__c = Integer.valueOf(receivedfacility.address[2].split('/')[0]);
+                    medicalFacility.Postcode__c = receivedfacility.address[3];
+                    medicalFacility.Name = receivedfacility.name;
+                    medicalFacility.External_ID__c = receivedfacility.id;
+                    HourWrapper openingHours = new HourWrapper();
+                    Map<String, HourWrapper> dayHours = openingHours.getHours(receivedfacility.openingHours);
+                    //medicalFacility.Opening_Hours__c = openingHours.openingHour;
+                    //medicalFacility.Phone__c = receivedfacility.phone;
+                    List<Operating_Hours__c> operatingHours = new List<Operating_Hours__c>();
+                    for(String day : dayHours.keySet()) {
+                        Operating_Hours__c operatingHour = new Operating_Hours__c();
+                        operatingHour.Day_of_Week__c = day;
+                        operatingHour.Opening_Time__c = dayHours.get(day).openingHour;
+                        operatingHour.Closing_Time__c = dayHours.get(day).closingHour;
+                        operatingHours.add(operatingHour);
+                    }
+                    medicalFacilitesWithOpeningHours.add(new Map<Medical_Facility__c, List<Operating_Hours__c>>{medicalFacility => operatingHours});
+                } 
+            } catch(JSONException e){
+                return medicalFacilitesWithOpeningHours;
+            }
         }
+        System.debug(medicalFacilitesWithOpeningHours);
+        return medicalFacilitesWithOpeningHours;
     }
     public class HourWrapper {
         public Time openingHour;
@@ -60,13 +69,12 @@ public class RESTMedicalFacilityExternal {
             Map<String, HourWrapper> openingHours = new Map<String, HourWrapper>();
             for (String day : hoursMap.keySet()) {
                 String hourInString = hoursMap.get(day);
-                Integer[] hours= new Integer[2];
-                Integer[] minutes= new Integer[2];
+                Integer[] hours= new Integer[0];
+                Integer[] minutes= new Integer[0];
                 for (String half : hourInString.split('-')) {
                     hours.add(Integer.valueOf(half.split(':')[0]));
                     minutes.add(Integer.valueOf(half.split(':')[1]));
                 }
-                
                 openingHours.put(day, new HourWrapper(Time.newInstance(hours[0],minutes[0],0,0), Time.newInstance(hours[1],minutes[1],0,0)));
             }
             return openingHours;
@@ -91,16 +99,5 @@ public class RESTMedicalFacilityExternal {
         }else{
                  throw new CalloutException('FAILED TO GET TOKEN');
         }
-    }
-    public static Operating_Hours__c getOperatingHoursFromMap(Map<String, HourWrapper> hoursMap) {
-        Operating_Hours__c operatingHour = new Operating_Hours__c();
-        for(String day : dayHours.keySet()) {
-            Operating_Hours__c operatingHour = new Operating_Hours__c();
-            operatingHour.Day_of_Week__c = day;
-            operatingHour.Opening_Time__c = dayHours.get(day).openingHour;
-            operatingHour.Closing_Time__c = dayHours.get(day).closingHour;
-            operatingHours.add(operatingHour);
-        }
-        return operatingHour;
     }
 }
