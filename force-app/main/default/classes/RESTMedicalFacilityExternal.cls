@@ -1,6 +1,6 @@
 public class RESTMedicalFacilityExternal {
     //zwracanie voida
-    public static List<Map<Medical_Facility__c, List<Operating_Hours__c>>> makeGetMedicalFacilities() {
+    public static Map<Medical_Facility__c, List<Operating_Hours__c>> makeGetMedicalFacilities() {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setHeader('Authorization', 'Bearer '+getToken());
@@ -8,7 +8,7 @@ public class RESTMedicalFacilityExternal {
         request.setMethod('GET');
         Account acc=new Account();
         HttpResponse response = http.send(request);
-        List<Map<Medical_Facility__c, List<Operating_Hours__c>>> medicalFacilitesWithOpeningHours = new List<Map<Medical_Facility__c, List<Operating_Hours__c>>>();
+        Map<Medical_Facility__c, List<Operating_Hours__c>> medicalFacilitesWithOpeningHours = new Map<Medical_Facility__c, List<Operating_Hours__c>>();
         if(response.getStatusCode() == 200) {
             try {
                 List<MedicalFacilityWrapper> receivedFacilities = (List<MedicalFacilityWrapper>)JSON.deserialize(response.getBody(), List<MedicalFacilityWrapper>.class);
@@ -29,11 +29,13 @@ public class RESTMedicalFacilityExternal {
                     for(String day : dayHours.keySet()) {
                         Operating_Hours__c operatingHour = new Operating_Hours__c();
                         operatingHour.Day_of_Week__c = day;
+                        //new
+                        operatingHour.Week_Day__c = day;
                         operatingHour.Opening_Time__c = dayHours.get(day).openingHour;
                         operatingHour.Closing_Time__c = dayHours.get(day).closingHour;
                         operatingHours.add(operatingHour);
                     }
-                    medicalFacilitesWithOpeningHours.add(new Map<Medical_Facility__c, List<Operating_Hours__c>>{medicalFacility => operatingHours});
+                    medicalFacilitesWithOpeningHours.put(medicalFacility, operatingHours);
                 } 
             } catch(JSONException e){
                 return medicalFacilitesWithOpeningHours;
