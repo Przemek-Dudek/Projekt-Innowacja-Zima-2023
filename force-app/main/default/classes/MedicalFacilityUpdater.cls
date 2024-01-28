@@ -10,61 +10,42 @@ public class MedicalFacilityUpdater implements Schedulable , Database.Stateful{
 
 
     public void execute(SchedulableContext ctx) {
-      Map<Medical_Facility__c, List<Operating_Hours__c>> medicalFacilitesWithOpeningHours = RESTMedicalFacilityExternal.makeGetMedicalFacilities();
-      List<Medical_Facility__c> medicalFacilitiesToUpsert = new List<Medical_Facility__c>();
-      List<String> medicalFacilityExternalIds = new List<String>();
+        // po exterenal Id łatwiej trochę będzie zrobić upserta
+    //   Map<Medical_Facility__c, List<Operating_Hours__c>> medicalFacilitesWithOpeningHours = RESTMedicalFacilityExternal.makeGetMedicalFacilities();
+    //   upsert new List<Medical_Facility__c>(medicalFacilitesWithOpeningHours.keySet()) External_ID__c;
+    //   List<Operating_Hours__c> operatingHoursToUpsert = new List<Operating_Hours__c>();
+    //   for (Medical_Facility__c m : medicalFacilitesWithOpeningHours.keySet()) {
+    //       for (Operating_Hours__c o : medicalFacilitesWithOpeningHours.get(m)) {
+    //             o.Medical_Facility__c = m.Id;
+    //             operatingHoursToUpsert.add(o);
+    //       }
+    //   }
+    //   upsert operatingHoursToUpsert;
+        putMedicalFacilities();
+    }
+    public static void putMedicalFacilities(){
+        Map<Medical_Facility__c, List<Operating_Hours__c>> medicalFacilitesWithOpeningHours = RESTMedicalFacilityExternal.makeGetMedicalFacilities();
+        Map<String, List<Operating_Hours__c>> operatingHoursWithFacilityExternalId = new Map<String, List<Operating_Hours__c>>();
+
         for (Medical_Facility__c m : medicalFacilitesWithOpeningHours.keySet()) {
-            medicalFacilitiesToUpsert.add(m);
-            medicalFacilityExternalIds.add(m.External_ID__c);
+            List<Operating_Hours__c> operatingHours = new List<Operating_Hours__c>();
+            for (Operating_Hours__c o : medicalFacilitesWithOpeningHours.get(m)) {
+                operatingHours.add(o);
+            }
+            operatingHoursWithFacilityExternalId.put(m.External_ID__c, operatingHours);
         }
-        List<Medical_Facility__c> medicalFacilitiesToUpdateFromDatabase = new List<Medical_Facility__c>([SELECT Id,External_ID__c FROM Medical_Facility__c WHERE External_ID__c IN :medicalFacilityExternalIds]);
-        List<Medical_Facility__c> medicalFacilitiesToUpdate = new List<Medical_Facility__c>();
-        List<Medical_Facility__c> medicalFacilitiesToInsert = new List<Medical_Facility__c>();
-        List<String> medicalFacilityToInsertExternalIds = new List<String>();
-        for (Medical_Facility__c m : medicalFacilitiesToUpdateFromDatabase) {
-            for (Medical_Facility__c m2 : medicalFacilitiesToUpsert) {
-                if (m.External_ID__c == m2.External_ID__c) {
-                    m2.Id = m.Id;
-                    medicalFacilitiesToUpdate.add(m2);
-                } else {
-                    medicalFacilitiesToInsert.add(m2);
-                    medicalFacilityToInsertExternalIds.add(m2.External_ID__c);
+
+        Database.upsert(new List<Medical_Facility__c>(medicalFacilitesWithOpeningHours.keySet()), Medical_Facility__c.External_ID__c, false);
+        List<Operating_Hours__c> operatingHoursToUpsert = new List<Operating_Hours__c>();
+        for(Medical_Facility__c m :medicalFacilitesWithOpeningHours.keySet()){
+            for (Operating_Hours__c o : operatingHoursWithFacilityExternalId.get(m.External_ID__c)) {
+                if(m.Id != null){
+                    m.Id = m.Id;
+                    o.Medical_Facility__c = m.Id;
+                    operatingHoursToUpsert.add(o);
                 }
             }
         }
-        update medicalFacilitiesToUpdate;
-        insert medicalFacilitiesToInsert;
-
-        List<Medical_Facility__c> idsToInstertedMedicalFacilities = new List<Medical_Facility__c>([SELECT Id,External_ID__c FROM Medical_Facility__c WHERE External_ID__c IN :medicalFacilityToInsertExternalIds]);
-        Map<String,Id> idsToInstertedMedicalFacilitiesExternalIds = new Map<String,Id>();
-        for (Medical_Facility__c m : idsToInstertedMedicalFacilities) {
-            idsToInstertedMedicalFacilitiesExternalIds.put(m.External_ID__c,m.Id);
-        }
-        
-        for (Medical_Facility__c m : medicalFacilitiesToInsert) {
-            m.Id = idsToInstertedMedicalFacilitiesExternalIds.get(m.External_ID__c);
-        }
-
-
-        List<Operating_Hours__c> operatingHoursToUpdate = new List<Operating_Hours__c>();
-        List<Operating_Hours__c> operatingHoursToInsert = new List<Operating_Hours__c>();
-        for (Medical_Facility__c m : medicalFacilitiesToUpdate) {
-            for (Operating_Hours__c o : medicalFacilitesWithOpeningHours.get(m)) {
-                o.Medical_Facility__c = m.Id;
-            }
-        }
-        for (Medical_Facility__c m : medicalFacilitiesToInsert) {
-            for (Operating_Hours__c o : medicalFacilitesWithOpeningHours.get(m)) {
-                o.Medical_Facility__c = m.Id;
-            }
-        }
-        for (Operating_Hours__c o : operatingHoursToInsert) {
-            operatingHoursToInsert.add(o);
-        }
-        for (Operating_Hours__c o : operatingHoursToUpdate) {
-            operatingHoursToUpdate.add(o);
-        }
-        update operatingHoursToUpdate;
-        insert operatingHoursToInsert;
+        Database.upsert(operatingHoursToUpsert, false);
     }
 }

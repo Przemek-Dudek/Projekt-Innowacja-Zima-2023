@@ -6,14 +6,12 @@ public class RESTMedicalFacilityExternal {
         request.setHeader('Authorization', 'Bearer '+getToken());
         request.setEndpoint('https://cw-inn--inta.sandbox.my.salesforce.com/services/apexrest/Medical_Facility__c');
         request.setMethod('GET');
-        Account acc=new Account();
         HttpResponse response = http.send(request);
         Map<Medical_Facility__c, List<Operating_Hours__c>> medicalFacilitesWithOpeningHours = new Map<Medical_Facility__c, List<Operating_Hours__c>>();
         if(response.getStatusCode() == 200) {
             try {
                 List<MedicalFacilityWrapper> receivedFacilities = (List<MedicalFacilityWrapper>)JSON.deserialize(response.getBody(), List<MedicalFacilityWrapper>.class);
                 for(MedicalFacilityWrapper receivedfacility : receivedFacilities) {
-                    System.debug(receivedfacility);
                     Medical_Facility__c medicalFacility = new Medical_Facility__c();
                     medicalFacility.City__c = receivedfacility.address[0];
                     medicalFacility.Street_Name__c = receivedfacility.address[1];
@@ -41,7 +39,6 @@ public class RESTMedicalFacilityExternal {
                 return medicalFacilitesWithOpeningHours;
             }
         }
-        System.debug(medicalFacilitesWithOpeningHours);
         return medicalFacilitesWithOpeningHours;
     }
     public class HourWrapper {
@@ -56,7 +53,6 @@ public class RESTMedicalFacilityExternal {
             this.closingHour = closingHour;
         }
         public HourWrapper(String openingTime){
-            System.debug(openingTime);
             Integer[] hours= new Integer[2];
             Integer[] minutes= new Integer[2];
             for (String half : openingTime.split('-')) {
