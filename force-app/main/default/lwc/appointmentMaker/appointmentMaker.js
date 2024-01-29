@@ -36,29 +36,29 @@ export default class AppointmentMaker extends LightningElement {
         }
     }
 
-    get getSpecOptions() {
-        return this.specializationOptions;
-    }
+    // get getSpecOptions() {
+    //     return this.specializationOptions;
+    // } wywalic
 
-    get getHourOptions() {
-        return this.availableHours;
-    }
+    // get getHourOptions() {
+    //     return this.availableHours;
+    // }
 
-    get getPatientOptions() {
-        return this.patientOptions;
-    }
+    // get getPatientOptions() {
+    //     return this.patientOptions;
+    // }
 
-    get getSelectedSpec() {
-        return this.selectedSpecialization;
-    }
+    // get getSelectedSpec() {
+    //     return this.selectedSpecialization;
+    // }
 
-    get getSelectedHour() {
-        return this.selectedHour;
-    }
+    // get getSelectedHour() {
+    //     return this.selectedHour;
+    // }
 
-    get getSelectedPatient() {
-        return this.selectedPatient;
-    }
+    // get getSelectedPatient() {
+    //     return this.selectedPatient;
+    // }
 
     @wire(getDoctorsBySpecialization, { specialization: '$selectedSpecialization' })
     wiredDoctors({ error, data }) {
@@ -79,12 +79,10 @@ export default class AppointmentMaker extends LightningElement {
     @wire(getAvailableHours, { selectedDate: '$selectedDate', selectedDoctor: '$selectedDoctor' })
     wiredHours({ error, data }) {
         if (data) {
-            this.availableHours = data.map(item => {
-                return {
+            this.availableHours = data.map(item => ({
                     label: item.openingTime.toString().substr(11, 5) + ' - ' + item.closingTime.toString().substr(11, 5),
                     value: item.openingTime
-                };
-            });
+            })); //Nawias zwraca return niepotrzebny
             console.log('Hours: ', data);
         } else if (error) {
             this.availableHours = [];
@@ -92,7 +90,7 @@ export default class AppointmentMaker extends LightningElement {
         }
     }
 
-    @wire(getPatients, { specialization: '$selectedSpecialization' })
+    @wire(getPatients)
     wiredPatients({ error, data }) {
         if (data) {
             this.patientOptions = data.map(patient => ({
@@ -138,7 +136,7 @@ export default class AppointmentMaker extends LightningElement {
 
     handleButtonClick(event) {
         const doctorId = event.target.dataset.key;
-        const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId);
+        const doctorIndex = this.doctors.findIndex(doc => doc.Id === doctorId); //find zamiast find index
         if (doctorIndex !== -1) {
             if(this.doctors[doctorIndex].clicked === 0) {
                 if(this.doctors[doctorIndex].Medical_Facility__r !== undefined) {
@@ -198,7 +196,7 @@ export default class AppointmentMaker extends LightningElement {
             return;
         }
 
-        const appointmentData = {
+        const appointmentData = { //required field
             doctorId: this.selectedDoctor.toString(),
             hour: this.selectedHour.toString(),
             patientId: this.selectedPatient.toString()
