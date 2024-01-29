@@ -7,16 +7,16 @@ import getPatients from '@salesforce/apex/AppointmentController.getPatients';
 import makeAppointment from '@salesforce/apex/AppointmentController.makeAppointment';
 
 export default class AppointmentMaker extends LightningElement {
-    @track selectedSpecialization = '';
-    @track doctors = [];
-    @track specializationOptions = [];
-    @track selectedDoctor = null;
-    @track selectedDate = null;
-    @track isHourAvailable;
-    @track selectedHour;
-    @track availableHours;
-    @track patientOptions;
-    @track selectedPatient;
+    selectedSpecialization = '';
+    doctors = [];
+    specializationOptions = [];
+    selectedDoctor = null;
+    selectedDate = null;
+    isHourAvailable;
+    selectedHour;
+    availableHours;
+    patientOptions;
+    selectedPatient;
 
     @wire(getSpecializations, {})
     getSpecializations({ data, error }) {
@@ -35,30 +35,6 @@ export default class AppointmentMaker extends LightningElement {
             console.error('Error fetching specializations:', error);
         }
     }
-
-    // get getSpecOptions() {
-    //     return this.specializationOptions;
-    // } wywalic
-
-    // get getHourOptions() {
-    //     return this.availableHours;
-    // }
-
-    // get getPatientOptions() {
-    //     return this.patientOptions;
-    // }
-
-    // get getSelectedSpec() {
-    //     return this.selectedSpecialization;
-    // }
-
-    // get getSelectedHour() {
-    //     return this.selectedHour;
-    // }
-
-    // get getSelectedPatient() {
-    //     return this.selectedPatient;
-    // }
 
     @wire(getDoctorsBySpecialization, { specialization: '$selectedSpecialization' })
     wiredDoctors({ error, data }) {

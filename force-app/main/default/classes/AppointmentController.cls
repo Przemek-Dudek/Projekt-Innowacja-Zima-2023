@@ -29,6 +29,8 @@ public with sharing class AppointmentController {
 
     @AuraEnabled(cacheable=true)
     public static List<Map<String, Datetime>> getAvailableHours(Datetime selectedDate, Id selectedDoctor) {
+        System.debug('selectedDate: ' + selectedDate + 'selectedDoctor: ' + selectedDoctor);
+
         Id selectedFacility = getFacilityId(selectedDoctor);
         String dayOfWeek = selectedDate.format('EEEE');
 
@@ -41,11 +43,11 @@ public with sharing class AppointmentController {
 
         List<HourWrapper> hours = generateOperatingHours(Datetime.newInstance(selectedDate.date(), operatingTime[0].Opening_Time__c), Datetime.newInstance(selectedDate.date(), operatingTime[0].Closing_Time__c));
 
-        List<Medical_Appointment__c> existingAppointments = getExistingAppointments(selectedDate.date(), operatingTime[0].Opening_Time__c, operatingTime[0].Closing_Time__c, selectedFacility);
+        List<Medical_Appointment__c> existingAppointments = getExistingAppointments(selectedDate, selectedFacility);
 
         removeConflictingHours(hours, existingAppointments);
 
-        System.debug(hours);
+        System.debug(existingAppointments);
 
         List<Map<String, Datetime>> hoursMapped = new List<Map<String, Datetime>>();
 
@@ -126,12 +128,11 @@ public with sharing class AppointmentController {
         return doc[0].Medical_Facility__c;
     }
 
-    private static List<Medical_Appointment__c> getExistingAppointments(Date selectedDate, Time openingTime, Time closingTime, Id selectedFacility) {
+    private static List<Medical_Appointment__c> getExistingAppointments(Datetime selectedDate, Id selectedFacility) {
         return [SELECT Id, Appointment_Date__c 
                 FROM Medical_Appointment__c 
-                WHERE Appointment_Date__c >= :DateTime.newInstance(selectedDate, openingTime) 
-                AND Appointment_Date__c < :DateTime.newInstance(selectedDate, closingTime) 
-                AND Medical_Facility__c = :selectedFacility];
+                WHERE DAY_ONLY(Appointment_Date__c) = :selectedDate.date()
+                AND Doctor__r.Medical_Facility__c = :selectedFacility];
     }
 
     private static void removeConflictingHours(List<HourWrapper> hours, List<Medical_Appointment__c> existingAppointments) {

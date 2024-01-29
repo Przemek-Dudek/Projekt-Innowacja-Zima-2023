@@ -13,11 +13,12 @@
           <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
             <div class="slds-grid slds-gutters">
                 <div class="slds-col slds-size_1-of-2">
+                    <!-- record-edit-form <- TO BYŁO PRZY class= NIZEJ -->
                     <lightning-combobox 
-                        class="slds-m-horizontal_large" record-edit-form <- TO
+                        class="slds-m-horizontal_large" 
                         label="Specialization"
-                        value={getSelectedSpec}
-                        options={getSpecOptions}
+                        value={selectedSpecialization}
+                        options={specializationOptions}
                         onchange={handleSpecializationChange}>
                     </lightning-combobox>
                 </div>
@@ -32,7 +33,7 @@
                 </div>
             </div>
 
-            <template if:true={doctors}>
+            <template lwc:if={doctors}>
                 <ul class="slds-m-around_large">
                     <template for:each={doctors} for:item="doctor">
                         <span key={doctor.Id} class="slds-grid slds-gutters slds-m-vertical_x-small" >
@@ -48,10 +49,10 @@
                                 </lightning-button>
                             </div>
                             <div class="slds-col slds-size_1-of-2 slds-align_absolute-center">
-                                <template if:true={doctor.Medical_Facility__r}> //lwc:if
+                                <template lwc:if={doctor.Medical_Facility__r}>
                                     <span class="slds-badge slds-m-top_xx-small">{doctor.Medical_Facility__r.Name}</span>
                                 </template>
-                                <template if:false={doctor.Medical_Facility__r}> //lwc:else
+                                <template lwc:else>
                                     <span class="slds-badge slds-badge_lightest slds-m-top_xx-small">Unavailable</span>
                                 </template>
                             </div>
@@ -60,13 +61,13 @@
                 </ul>
             </template>
 
-            <template if:true={isHourAvailable}>
+            <template lwc:if={isHourAvailable}>
                 <div class="row slds-m-horizontal_large">
                     <lightning-combobox 
                         class="slds-m-horizontal_large"
                         label="Select convenient time"
-                        value={getSelectedHour}
-                        options={getHourOptions}
+                        value={selectedHour}
+                        options={availableHours}
                         onchange={handleHourChange}>
                     </lightning-combobox>
                 </div>
@@ -75,8 +76,8 @@
                     <lightning-combobox 
                         class="slds-m-horizontal_large"
                         label="Select patient"
-                        value={getSelectedPatient}
-                        options={getPatientOptions}
+                        value={selectedPatient}
+                        options={patientOptions}
                         onchange={handlePatientChange}>
                     </lightning-combobox>
                 </div>
