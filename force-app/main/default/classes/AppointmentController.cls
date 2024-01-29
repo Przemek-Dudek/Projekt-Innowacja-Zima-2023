@@ -10,18 +10,22 @@ public with sharing class AppointmentController {
     public static List<Person__c> getDoctorsBySpecialization(String specialization) {
         return [SELECT Id, First_Name__c, LastName__c, Specialization__c, Medical_Facility__r.Name
                 FROM Person__c
-                WHERE RecordType.Name = 'Doctor' AND Specialization__c = :specialization //developer name
+                WHERE RecordType.DeveloperName = 'Doctor' AND Specialization__c = :specialization
         ];
     }
 
     @AuraEnabled(cacheable=true)
     public static List<String> getSpecializations() {
-        List<AggregateResult> tmp = [SELECT Specialization__c FROM Person__c WHERE RecordType.Name = 'Doctor' GROUP BY Specialization__c];
+        List<String> specializationsList = new List<String>();
 
-        List<String> specializationsList = new List<String>(); //wartosci picklisty ze schemy getpicklistvalues Person.Specialization__c.getDescribe().getpicklistvalues
+        Schema.DescribeFieldResult fieldDescribe = Person__c.Specialization__c.getDescribe();
 
-        for (AggregateResult p : tmp) {
-            specializationsList.add((String)p.get('Specialization__c'));
+        if (fieldDescribe != null && fieldDescribe.getPicklistValues() != null) {
+            List<Schema.PicklistEntry> picklistValues = fieldDescribe.getPicklistValues();
+
+            for (Schema.PicklistEntry picklistEntry : picklistValues) {
+                specializationsList.add(picklistEntry.getLabel());
+            }
         }
 
         return specializationsList;
@@ -67,7 +71,7 @@ public with sharing class AppointmentController {
     public static List<Person__c> getPatients() {
         return [SELECT Id, First_Name__c, LastName__c
                 FROM Person__c
-                WHERE RecordType.Name = 'Patient'
+                WHERE RecordType.DeveloperName = 'Patient'
         ];
     }
 
