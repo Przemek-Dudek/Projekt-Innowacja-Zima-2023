@@ -47,7 +47,7 @@ public with sharing class AppointmentController {
 
         List<HourWrapper> hours = generateOperatingHours(Datetime.newInstance(selectedDate.date(), operatingTime[0].Opening_Time__c), Datetime.newInstance(selectedDate.date(), operatingTime[0].Closing_Time__c));
 
-        List<Medical_Appointment__c> existingAppointments = getExistingAppointments(selectedDate, selectedFacility);
+        List<Medical_Appointment__c> existingAppointments = getExistingAppointments(selectedDate, selectedDoctor);
 
         removeConflictingHours(hours, existingAppointments);
 
@@ -132,11 +132,11 @@ public with sharing class AppointmentController {
         return doc[0].Medical_Facility__c;
     }
 
-    private static List<Medical_Appointment__c> getExistingAppointments(Datetime selectedDate, Id selectedFacility) {
+    private static List<Medical_Appointment__c> getExistingAppointments(Datetime selectedDate, Id selectedDoctor) {
         return [SELECT Id, Appointment_Date__c 
                 FROM Medical_Appointment__c 
                 WHERE DAY_ONLY(Appointment_Date__c) = :selectedDate.date()
-                AND Doctor__r.Medical_Facility__c = :selectedFacility];
+                AND Doctor__c = :selectedDoctor];
     }
 
     private static void removeConflictingHours(List<HourWrapper> hours, List<Medical_Appointment__c> existingAppointments) {
