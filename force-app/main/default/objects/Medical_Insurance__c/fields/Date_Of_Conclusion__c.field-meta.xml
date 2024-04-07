@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Date_Of_Conclusion__c</fullName>
+    <description>The date of which the contract is valid</description>
+    <externalId>false</externalId>
+    <label>Date Of Conclusion</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>240655@edu.p.lodz.pl</contactEmail>
+    <label>REST API</label>
+    <oauthConfig>
+        <callbackUrl>https://www.youtube.com/watch?v=dQw4w9WgXcQ</callbackUrl>
+        <consumerKey>3MVG96mGXeuuwTZhXPHaneBKoQynDiAgArutD6PyY76LhGsStLB0LHXZFggqR7Ye4EN_UJkggNgFld_G_77n6</consumerKey>
+        <isAdminApproved>false</isAdminApproved>
+        <isClientCredentialEnabled>true</isClientCredentialEnabled>
+        <isCodeCredentialEnabled>false</isCodeCredentialEnabled>
+        <isCodeCredentialPostOnly>false</isCodeCredentialPostOnly>
+        <isConsumerSecretOptional>false</isConsumerSecretOptional>
+        <isIntrospectAllTokens>false</isIntrospectAllTokens>
+        <isNamedUserJwtEnabled>false</isNamedUserJwtEnabled>
+        <isSecretRequiredForRefreshToken>true</isSecretRequiredForRefreshToken>
+        <oauthClientCredentialUser>240655@edu.p.lodz.pl.iuser</oauthClientCredentialUser>
+        <scopes>Api</scopes>
+    </oauthConfig>
+    <oauthPolicy>
+        <ipRelaxation>ENFORCE</ipRelaxation>
+        <refreshTokenPolicy>zero</refreshTokenPolicy>
+    </oauthPolicy>
+</ConnectedApp>

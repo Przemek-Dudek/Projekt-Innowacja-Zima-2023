@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Personal_Id_Number_Is_It_Correct</fullName>
+    <active>true</active>
+    <description>The validation rule that checks if the PESEL is correct.</description>
+    <errorConditionFormula>OR(
+LEN(Personal_ID_Number__c) &lt;&gt; 11,
+NOT(ISNUMBER(Personal_ID_Number__c)),
+  NOT(MOD(
+1 * VALUE(LEFT(Personal_ID_Number__c, 1)) + 3 * VALUE(MID(Personal_ID_Number__c, 2, 1)) + 7 *
+VALUE(MID(Personal_ID_Number__c, 3, 1)) + 9 *
+VALUE(MID(Personal_ID_Number__c, 4, 1)) +
+1 * VALUE(MID(Personal_ID_Number__c, 5, 1)) + 3 * VALUE(MID(Personal_ID_Number__c, 6, 1)) + 7 *
+VALUE(MID(Personal_ID_Number__c, 7, 1)) + 9 *
+VALUE(MID(Personal_ID_Number__c, 8, 1)) +
+1 * VALUE(MID(Personal_ID_Number__c, 9, 1)) + 3 * VALUE(MID(Personal_ID_Number__c, 10, 1)),
+10) &lt;&gt; 0),
+  AND(
+   VALUE(MID(Personal_ID_Number__c,3 , 2)) &lt; 1,
+   VALUE(MID(Personal_ID_Number__c,3 , 2)) &gt; 12
+  ),
+  AND(
+   VALUE(LEFT(Personal_ID_Number__c, 2)) &gt; VALUE(TEXT(YEAR(TODAY()))),
+   VALUE(LEFT(Personal_ID_Number__c, 2)) &lt; 0
+  )
+)</errorConditionFormula>
+    <errorMessage>Personal Id Number is incorrect!</errorMessage>
+</ValidationRule>

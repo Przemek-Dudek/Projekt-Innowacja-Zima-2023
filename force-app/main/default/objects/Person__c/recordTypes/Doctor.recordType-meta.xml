@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Doctor</fullName>
+    <active>true</active>
+    <label>Doctor</label>
+    <picklistValues>
+        <picklist>Specialization__c</picklist>
+        <values>
+            <fullName>Allergist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cardiologist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internist</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Laryngologist</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>
